@@ -5707,6 +5707,12 @@ public final class Settings {
         public static final String CAMERA_DOUBLE_TAP_POWER_GESTURE_DISABLED =
                 "camera_double_tap_power_gesture_disabled";
 
+	/**
+         * Whether to include options in power menu for rebooting into recovery or bootloader
+         * @hide
+         */
+        public static final String ADVANCED_REBOOT = "advanced_reboot";
+
         /**
          * This are the settings to be backed up.
          *
@@ -5764,6 +5770,7 @@ public final class Settings {
             SLEEP_TIMEOUT,
             DOUBLE_TAP_TO_WAKE,
             CAMERA_GESTURE_DISABLED,
+            ADVANCED_REBOOT
         };
 
         /**

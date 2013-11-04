@@ -10,4 +10,16 @@
     <string name="reboot_confirm" product="default">Your phone will reboot.</string>
     <!-- label for item that reboots the phone in phone options dialog -->
     <string name="global_action_reboot">Reboot</string>
+
+    <!-- Reboot menu -->
+    <!-- Reboot Progress Dialog. This is shown if the user chooses to reboot the phone. -->
+    <string name="reboot_progress">Your phone is rebooting\u2026</string>
+    <!-- Button to reboot the phone, within the Reboot Options dialog -->
+    <string name="reboot_reboot">Reboot</string>
+    <!-- Button to reboot the phone into recovery, within the Reboot Options dialog -->
+    <string name="reboot_recovery">Recovery</string>
+    <!-- Button to reboot the phone into bootloader, within the Reboot Options dialog -->
+    <string name="reboot_bootloader">Bootloader</string>
+    <!-- Button to soft reboot the device, within the Reboot Options dialog -->
+    <string name="reboot_soft">Soft reboot</string>
 </resources>
