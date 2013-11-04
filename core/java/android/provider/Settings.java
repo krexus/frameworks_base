@@ -6308,6 +6308,12 @@ public final class Settings {
         public static final String CAMERA_DOUBLE_TAP_POWER_GESTURE_DISABLED =
                 "camera_double_tap_power_gesture_disabled";
 
+	/**
+         * Whether to include options in power menu for rebooting into recovery or bootloader
+         * @hide
+         */
+        public static final String ADVANCED_REBOOT = "advanced_reboot";
+
         /**
          * Whether the camera double twist gesture to flip between front and back mode should be
          * enabled.
@@ -6557,7 +6563,8 @@ public final class Settings {
             QS_TILES,
             DOZE_ENABLED,
             DOZE_PULSE_ON_PICK_UP,
-            DOZE_PULSE_ON_DOUBLE_TAP
+            DOZE_PULSE_ON_DOUBLE_TAP,
+            ADVANCED_REBOOT
         };
 
         /**
