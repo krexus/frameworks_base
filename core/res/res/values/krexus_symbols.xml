@@ -39,4 +39,12 @@
   <java-symbol type="bool" name="config_allowNotificationIconTextTinting" />
   <java-symbol type="color" name="notification_text_default_color" />
   <java-symbol type="color" name="sender_text_color" />
+
+  <!-- Advanced Power menu w/ restart options -->
+  <java-symbol type="array" name="shutdown_reboot_options" />
+  <java-symbol type="array" name="shutdown_reboot_actions" />
+  <java-symbol type="string" name="reboot_title" />
+  <java-symbol type="string" name="reboot_confirm" />
+  <java-symbol type="string" name="reboot_progress" />
+
 </resources>

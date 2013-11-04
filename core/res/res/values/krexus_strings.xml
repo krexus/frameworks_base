@@ -5,4 +5,17 @@
     <!-- Vendor mismatched fingerprint warning [CHAR LIMIT=NONE] -->
     <string name="system_error_vendorprint">Your vendor image does not match the system. Please flash the <xliff:g id="string">%s</xliff:g> vendor image for your device</string>
 
+    <!-- Reboot menu -->
+    <!-- Reboot Progress Dialog. This is shown if the user chooses to reboot the phone. -->
+    <string name="reboot_title">@string/global_action_restart</string>
+    <string name="reboot_confirm">Your device will restart.</string>
+    <string name="reboot_progress">Restarting\u2026</string>
+
+    <!-- Button to restart the phone, within the Restart Options dialog -->
+    <string name="reboot_system">System</string>
+    <!-- Button to restart the phone into recovery, within the Restart Options dialog -->
+    <string name="reboot_recovery">Recovery</string>
+    <!-- Button to restart the phone into bootloader, within the Restart Options dialog -->
+    <string name="reboot_bootloader">Bootloader</string>
+
 </resources>
