@@ -43,4 +43,7 @@
 
   <!-- Vendor warning -->
   <java-symbol type="string" name="system_error_vendorprint" />
+
+  <!-- lockscreen Wallpaper -->
+  <java-symbol type="anim" name="lock_screen_wallpaper_exit_noop" />
 </resources>
