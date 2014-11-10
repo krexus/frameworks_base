@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- quick QuickSettings pulldown:
+        0: disabled
+        1: same side as the clock / signal cluster view (old: right)
+        2: opposite of the clock / signal cluster view (old: left)
+    -->
+    <integer name="config_quick_qs_pulldown">0</integer>
+
+</resources>
