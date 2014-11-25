@@ -34,4 +34,7 @@
     
     <!-- Battery level for when "show battery percent only on low battery" is enabled -->
     <integer name="config_batteryPercentLowOnlyLevel">25</integer>
+
+    <!-- Enable power button on a secured lockscreen -->
+    <bool name="config_powerButtonLockscreenEnabled">false</bool>
 </resources>
