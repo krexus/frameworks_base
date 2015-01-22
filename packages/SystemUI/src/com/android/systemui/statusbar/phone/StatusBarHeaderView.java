@@ -656,7 +656,9 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         mTime.setScaleY(values.timeScale);
         mClock.setY(values.clockY - mClock.getHeight());
         mDateGroup.setY(values.dateY);
-        mStatusBarPowerMenu.setY(values.statusBarPowerMenuY);
+        if (mStatusBarPowerMenuStyle != STATUS_BAR_POWER_MENU_OFF) {
+            mStatusBarPowerMenu.setY(values.statusBarPowerMenuY);
+        }
         mAlarmStatus.setY(values.dateY - mAlarmStatus.getPaddingTop());
         mMultiUserAvatar.setScaleX(values.avatarScale);
         mMultiUserAvatar.setScaleY(values.avatarScale);
@@ -686,6 +688,9 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         mSettingsButton.setTranslationY(mSystemIconsSuperContainer.getTranslationY());
         mSettingsButton.setTranslationX(values.settingsTranslation);
         mSettingsButton.setRotation(values.settingsRotation);
+        if (mStatusBarPowerMenuStyle != STATUS_BAR_POWER_MENU_OFF) {
+            mStatusBarPowerMenu.setRotation(values.settingsRotation);
+        }
         applyAlpha(mEmergencyCallsOnly, values.emergencyCallsOnlyAlpha);
         if (!mShowingDetail) {
             // Otherwise it needs to stay invisible
