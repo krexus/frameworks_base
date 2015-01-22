@@ -29,7 +29,9 @@ import com.android.systemui.qs.UsageTracker;
 
 /** Quick settings tile: Invert colors **/
 public class ColorInversionTile extends QSTile<QSTile.BooleanState> {
-    private static final Intent ACCESSIBILITY_SETTINGS = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+    public static final String SPEC = "inversion";
+    private static final Intent ACCESSIBILITY_SETTINGS =
+            new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
 
     private final AnimationIcon mEnable
             = new AnimationIcon(R.drawable.ic_invert_colors_enable_animation);
@@ -41,7 +43,7 @@ public class ColorInversionTile extends QSTile<QSTile.BooleanState> {
     private boolean mListening;
 
     public ColorInversionTile(Host host) {
-        super(host);
+        super(host, SPEC);
 
         mSetting = new SecureSetting(mContext, mHandler,
                 Secure.ACCESSIBILITY_DISPLAY_INVERSION_ENABLED) {
@@ -89,7 +91,7 @@ public class ColorInversionTile extends QSTile<QSTile.BooleanState> {
     }
 
     @Override
-    protected void handleClick() {
+    protected void handleToggleClick() {
         MetricsLogger.action(mContext, getMetricsCategory(), !mState.value);
         mSetting.setValue(mState.value ? 0 : 1);
         mEnable.setAllowAnimation(true);
@@ -99,6 +101,12 @@ public class ColorInversionTile extends QSTile<QSTile.BooleanState> {
     @Override
     protected void handleLongClick() {
         mHost.startActivityDismissingKeyguard(ACCESSIBILITY_SETTINGS);
+    }
+
+    @Override
+    protected void handleDetailClick() {
+        // There are no additional details and we do not want to link this up to Accessibility.
+        handleToggleClick();
     }
 
     @Override

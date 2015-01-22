@@ -34,6 +34,8 @@ import com.android.systemui.R;
 /** Quick settings tile: Caffeine **/
 public class CaffeineTile extends QSTile<QSTile.BooleanState> {
 
+   public static final String SPEC = "caffeine";
+
     private final PowerManager.WakeLock mWakeLock;
     private int mSecondsRemaining;
     private int mDuration;
@@ -49,7 +51,7 @@ public class CaffeineTile extends QSTile<QSTile.BooleanState> {
     private boolean mListening;
 
     public CaffeineTile(Host host) {
-        super(host);
+        super(host, SPEC);
         mWakeLock = ((PowerManager) mContext.getSystemService(Context.POWER_SERVICE)).newWakeLock(
                 PowerManager.FULL_WAKE_LOCK, "CaffeineTile");
         mReceiver.init();
@@ -80,7 +82,7 @@ public class CaffeineTile extends QSTile<QSTile.BooleanState> {
     }
 
     @Override
-    public void handleClick() {
+    public void handleToggleClick() {
         // If last user clicks < 5 seconds
         // we cycle different duration
         // otherwise toggle on/off
@@ -115,6 +117,11 @@ public class CaffeineTile extends QSTile<QSTile.BooleanState> {
         }
         mLastClickTime = SystemClock.elapsedRealtime();
         refreshState();
+    }
+
+    @Override
+    public void handleDetailClick() {
+        handleToggleClick();
     }
 
     private void startCountDown(long duration) {
