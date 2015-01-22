@@ -40,6 +40,8 @@ import java.util.Arrays;
 
 public class ScreenTimeoutTile extends QSTile<ScreenTimeoutTile.TimeoutState> {
 
+    public static final String SPEC = "timeout";
+
     private static final Intent SETTINGS_INTENT = new Intent(Settings.ACTION_DISPLAY_SETTINGS);
     private static final String TIMEOUT_ENTRIES_NAME = "screen_timeout_entries";
     private static final String TIMEOUT_VALUES_NAME = "screen_timeout_values";
@@ -64,7 +66,7 @@ public class ScreenTimeoutTile extends QSTile<ScreenTimeoutTile.TimeoutState> {
             = new ArrayList<Integer>();
 
     public ScreenTimeoutTile(Host host) {
-        super(host);
+        super(host, SPEC);
         populateList();
     }
 
@@ -128,22 +130,17 @@ public class ScreenTimeoutTile extends QSTile<ScreenTimeoutTile.TimeoutState> {
     }
 
     @Override
-    protected void handleClick() {
+    protected void handleToggleClick() {
+        handleDetailClick();
+    }
+
+    @Override
+    protected void handleDetailClick() {
         if (mEntries.length > 0) {
             mShowingDetail = true;
             mAnimationList.clear();
             showDetail(true);
         }
-    }
-
-    @Override
-    protected void handleSecondaryClick() {
-        mHost.startActivityDismissingKeyguard(SETTINGS_INTENT);
-    }
-
-    @Override
-    protected void handleLongClick() {
-        mHost.startActivityDismissingKeyguard(SETTINGS_INTENT);
     }
 
     private String makeTimeoutSummaryString(int timeout) {

@@ -42,6 +42,7 @@ import java.util.List;
 
 /** Quick settings tile: Location **/
 public class LocationTile extends QSTile<QSTile.BooleanState> {
+    public static final String SPEC = "location";
     private static final Intent LOCATION_SETTINGS_INTENT
             = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
     public static final Integer[] LOCATION_SETTINGS = new Integer[]{
@@ -62,7 +63,7 @@ public class LocationTile extends QSTile<QSTile.BooleanState> {
     private final Callback mCallback = new Callback();
 
     public LocationTile(Host host) {
-        super(host);
+        super(host, SPEC);
         mController = host.getLocationController();
         mDetailAdapter = new LocationDetailAdapter();
         mKeyguard = host.getKeyguardMonitor();
@@ -90,7 +91,7 @@ public class LocationTile extends QSTile<QSTile.BooleanState> {
     }
 
     @Override
-    protected void handleClick() {
+    protected void handleToggleClick() {
         final boolean wasEnabled = (Boolean) mState.value;
         MetricsLogger.action(mContext, getMetricsCategory(), !wasEnabled);
         if(mController.isAdvancedSettingsEnabled()) {
@@ -103,8 +104,9 @@ public class LocationTile extends QSTile<QSTile.BooleanState> {
     }
 
     @Override
-    protected void handleLongClick() {
-        mHost.startActivityDismissingKeyguard(LOCATION_SETTINGS_INTENT);
+    protected void handleDetailClick() {
+        // TODO Implement a nicer in-line detail view
+        handleToggleClick();
     }
 
     @Override

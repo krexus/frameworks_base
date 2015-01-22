@@ -29,7 +29,7 @@ import com.android.systemui.qs.QSTile;
 /** Quick settings tile: Sound **/
 public class SoundTile extends QSTile<QSTile.State> {
 
-    private static final Intent SOUND_SETTINGS = new Intent("android.settings.SOUND_SETTINGS");
+    public static final String SPEC = "sound";
 
     private final AudioManager mAudioManager;
 
@@ -39,7 +39,7 @@ public class SoundTile extends QSTile<QSTile.State> {
     private IntentFilter mFilter;
 
     public SoundTile(Host host) {
-        super(host);
+        super(host, SPEC);
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         mReceiver = new BroadcastReceiver() {
             @Override
@@ -68,13 +68,13 @@ public class SoundTile extends QSTile<QSTile.State> {
     }
 
     @Override
-    public void handleClick() {
+    public void handleToggleClick() {
         updateState();
     }
 
     @Override
-    protected void handleLongClick() {
-        mHost.startActivityDismissingKeyguard(SOUND_SETTINGS);
+    protected void handleDetailClick() {
+        handleToggleClick();
     }
 
     private void updateState() {

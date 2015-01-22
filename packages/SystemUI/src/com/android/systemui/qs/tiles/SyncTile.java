@@ -27,11 +27,13 @@ import com.android.systemui.qs.QSTile;
 /** Quick settings tile: Sync **/
 public class SyncTile extends QSTile<QSTile.BooleanState> {
 
+   public static final String SPEC = "sync";
+
     private Object mSyncObserverHandle = null;
     private boolean mListening;
 
     public SyncTile(Host host) {
-        super(host);
+        super(host, SPEC);
     }
 
     @Override
@@ -45,16 +47,14 @@ public class SyncTile extends QSTile<QSTile.BooleanState> {
     }
 
     @Override
-    public void handleClick() {
+    public void handleToggleClick() {
         ContentResolver.setMasterSyncAutomatically(!mState.value);
         refreshState();
     }
 
     @Override
-    public void handleLongClick() {
-        Intent intent = new Intent("android.settings.SYNC_SETTINGS");
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        mHost.startActivityDismissingKeyguard(intent);
+    public void handleDetailClick() {
+        handleToggleClick();
     }
 
     @Override
