@@ -2771,7 +2771,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         // This is only possible to do atomically because the status bar is at the top of the screen!
         mStatusBarWindowManager.setPanelVisible(true);
 
-        visibilityChanged(true);
+        if (!force) {
+            visibilityChanged(true);
+        }
         mWaitingForKeyguardExit = false;
         recomputeDisableFlags(!force /* animate */);
         setInteracting(StatusBarManager.WINDOW_STATUS_BAR, true);
