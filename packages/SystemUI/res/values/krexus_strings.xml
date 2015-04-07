@@ -92,4 +92,7 @@
 
     <!-- Screenshot: Delete toast -->
     <string name="delete_screenshot_toast">Screenshot deleted</string>
+
+    <!-- Sound QS Tile -->
+    <string name="quick_settings_sound_label">Sound</string>
 </resources>
