@@ -9,4 +9,7 @@
     -->
     <integer name="config_quick_qs_pulldown">0</integer>
 
+    <!-- Show the disconnected bluetooth icon -->
+    <bool name="config_show_disconnected_bluetooth">true</bool>
+
 </resources>
