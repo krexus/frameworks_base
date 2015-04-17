@@ -2343,4 +2343,7 @@
 
   <java-symbol type="string" name="config_iccHotswapPromptForRestartDialogComponent" />
   <java-symbol type="string" name="config_packagedKeyboardName" />
+
+  <!-- Doze invert -->
+  <java-symbol type="bool" name="config_invert_colors_on_doze" />
 </resources>
