@@ -29,6 +29,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.database.ContentObserver;
 import android.os.BatteryManager;
 import android.os.BatteryManagerInternal;
 import android.os.BatteryProperties;
@@ -141,6 +143,9 @@ public final class BatteryService extends SystemService {
 
     private Led mLed;
 
+    // Disable LED until SettingsObserver can be started
+    private boolean mBatteryLedEnabled = false;
+
     private boolean mSentLowBatteryBroadcast = false;
 
     public BatteryService(Context context) {
@@ -201,6 +206,9 @@ public final class BatteryService extends SystemService {
                         false, obs, UserHandle.USER_ALL);
                 updateBatteryWarningLevelLocked();
             }
+	} else if (phase == PHASE_BOOT_COMPLETED) {
+                SettingsObserver observer = new SettingsObserver(new Handler());
+                 observer.observe();
         }
     }
 
@@ -750,28 +758,62 @@ public final class BatteryService extends SystemService {
         public void updateLightsLocked() {
             final int level = mBatteryProps.batteryLevel;
             final int status = mBatteryProps.batteryStatus;
-            if (level < mLowBatteryWarningLevel) {
-                if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
-                    // Solid red when battery is charging
-                    mBatteryLight.setColor(mBatteryLowARGB);
-                } else {
-                    // Flash red when battery is low and not charging
-                    mBatteryLight.setFlashing(mBatteryLowARGB, Light.LIGHT_FLASH_TIMED,
+	    if (!mBatteryLedEnabled) {
+	    // Disable all charging battery lights
+	    mBatteryLight.turnOff();
+            } else if (level < mLowBatteryWarningLevel) {
+                 if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
+                     // Solid red when battery is charging
+                     mBatteryLight.setColor(mBatteryLowARGB);
+                 } else {
+                     // Flash red when battery is low and not charging
+                     mBatteryLight.setFlashing(mBatteryLowARGB, Light.LIGHT_FLASH_TIMED,
                             mBatteryLedOn, mBatteryLedOff);
-                }
-            } else if (status == BatteryManager.BATTERY_STATUS_CHARGING
-                    || status == BatteryManager.BATTERY_STATUS_FULL) {
-                if (status == BatteryManager.BATTERY_STATUS_FULL || level >= 90) {
-                    // Solid green when full or charging and nearly full
-                    mBatteryLight.setColor(mBatteryFullARGB);
-                } else {
+                 }
+             } else if (status == BatteryManager.BATTERY_STATUS_CHARGING
+                     || status == BatteryManager.BATTERY_STATUS_FULL) {
+                 if (status == BatteryManager.BATTERY_STATUS_FULL || level >= 90) {
+                     // Solid green when full or charging and nearly full
+                     mBatteryLight.setColor(mBatteryFullARGB);
+                 } else {
                     // Solid orange when charging and halfway full
                     mBatteryLight.setColor(mBatteryMediumARGB);
-                }
-            } else {
+                 }
+             } else {
                 // No lights if not charging and not low
                 mBatteryLight.turnOff();
             }
+        }
+    }
+
+    class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+
+            // Chargin battery LED light enabled
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.CHARGING_BATTERY_LED), false, this, UserHandle.USER_ALL);
+
+            update();
+        }
+
+        @Override public void onChange(boolean selfChange) {
+            update();
+        }
+
+        public void update() {
+            ContentResolver resolver = mContext.getContentResolver();
+            Resources res = mContext.getResources();
+
+            // Charging battery LED light enabled
+            mBatteryLedEnabled = Settings.System.getInt(resolver,
+                    Settings.System.CHARGING_BATTERY_LED, 1) != 0;
+
+            mLed.updateLightsLocked();
         }
     }
 
