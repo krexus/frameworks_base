@@ -2984,6 +2984,14 @@ public final class Settings {
          * @hide
          */
         public static final String NOTIFICATION_LIGHT_PULSE = "notification_light_pulse";
+        
+        /**
+         * Whether the notification LED should stay on when the device is charging.
+         * The value is boolean (1 or 0).
+         * @hide
+         */
+        public static final String CHARGING_BATTERY_LED = "charging_battery_led";
+        
 
         /** @hide */
         public static final Validator NOTIFICATION_LIGHT_PULSE_VALIDATOR = sBooleanValidator;
