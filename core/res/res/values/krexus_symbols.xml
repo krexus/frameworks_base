@@ -28,4 +28,6 @@
   <java-symbol type="string" name="reboot_progress" />
   <java-symbol type="string" name="global_action_reboot" />
 
+  <!-- Charging Battery led -->
+  <java-symbol type="bool" name="config_intrusiveBatteryLed" />
 </resources>
