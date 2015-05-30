@@ -1,4 +1,4 @@
-package com.android.internal.util.rastapop;
+package com.android.internal.util.icarus;
 
 import android.app.ActivityManagerNative;
 import android.app.IActivityManager;
