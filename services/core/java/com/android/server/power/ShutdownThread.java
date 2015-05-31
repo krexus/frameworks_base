@@ -171,12 +171,11 @@ public final class ShutdownThread extends Thread {
                         com.android.internal.R.integer.config_longPressOnPowerBehavior);
         int resourceId = mRebootSafeMode
                 ? com.android.internal.R.string.reboot_safemode_confirm
-                : (longPressBehavior == 2
+                : ((showRebootOption && mReboot)
+                    ? com.android.internal.R.string.reboot_confirm 
+                    : (longPressBehavior == 2
                         ? com.android.internal.R.string.shutdown_confirm_question
-                        : com.android.internal.R.string.shutdown_confirm);
-        if (showRebootOption && !mRebootSafeMode) {
-            resourceId = com.android.internal.R.string.reboot_confirm;
-        }
+                        : com.android.internal.R.string.shutdown_confirm));
 
         Log.d(TAG, "Notifying thread to start shutdown longPressBehavior=" + longPressBehavior);
 
@@ -191,23 +190,24 @@ public final class ShutdownThread extends Thread {
             AlertDialog.Builder confirmDialogBuilder = new AlertDialog.Builder(context)
                     .setTitle(mRebootSafeMode
                             ? com.android.internal.R.string.reboot_safemode_title
-                            : showRebootOption
+                            : ((showRebootOption && mReboot)
                                     ? com.android.internal.R.string.reboot_title
-                                    : com.android.internal.R.string.power_off);
+                                    : com.android.internal.R.string.power_off));
 
-            if (!advancedReboot) {
-                confirmDialogBuilder.setMessage(resourceId);
-            } else {
+           
+            if (advancedReboot && mReboot && !mRebootSafeMode) {
                 confirmDialogBuilder
                       .setSingleChoiceItems(com.android.internal.R.array.shutdown_reboot_options,
                               0, null);
-            }
+            } else {
+                confirmDialogBuilder.setMessage(resourceId);
+            }                
 
             confirmDialogBuilder.setPositiveButton(com.android.internal.R.string.yes,
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if (advancedReboot) {
+                            if (advancedReboot && mReboot && !mRebootSafeMode) {
                                 boolean softReboot = false;
                                 ListView reasonsList = ((AlertDialog)dialog).getListView();
                                 int selected = reasonsList.getCheckedItemPosition();
