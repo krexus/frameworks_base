@@ -333,16 +333,10 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
         return dialog;
     }
 
-    private final class PowerAction extends SinglePressAction implements LongPressAction {
+    private final class PowerAction extends SinglePressAction {
         private PowerAction() {
             super(com.android.internal.R.drawable.ic_lock_power_off,
                 R.string.global_action_power_off);
-        }
-
-        @Override
-        public boolean onLongPress() {
-            mWindowManagerFuncs.rebootSafeMode(true);
-            return true;
         }
 
         @Override
@@ -362,10 +356,16 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
         }
     }
 
-    private final class RebootAction extends SinglePressAction {
+    private final class RebootAction extends SinglePressAction implements LongPressAction {
         private RebootAction() {
             super(com.android.internal.R.drawable.ic_lock_power_reboot,
                     R.string.global_action_reboot);
+        }
+
+        @Override
+        public boolean onLongPress() {
+            mWindowManagerFuncs.rebootSafeMode(true);
+            return true;
         }
 
         @Override
