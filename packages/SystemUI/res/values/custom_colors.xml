@@ -56,4 +56,6 @@
     <color name="notification_icon_color">#FFFFFFFF</color>
     <!-- Navigation button ripple color -->
     <color name="navbutton_ripple_color">#FFFFFFFF</color>
+    <!-- Screen pinning (lock to task) fab background color -->
+    <color name="recents_screen_pinning_bg_color">#9cc8c4</color>
 </resources>
