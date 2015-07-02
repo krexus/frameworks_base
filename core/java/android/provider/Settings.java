@@ -2749,25 +2749,7 @@ public final class Settings {
          * @hide
          */
         public static final String VOLUME_ROCKER_MUSIC_CONTROLS = "volume_rocker_music_controls";
-
-        /**
-         * Status bar battery percent style
-         * 0: Hide the battery percentage
-         * 1: Display the battery percentage inside the icon
-         * 2: Display the battery percentage next to the icon
-         * @hide
-         */
-        public static final String STATUS_BAR_SHOW_BATTERY_PERCENT = "status_bar_show_battery_percent";
-
-        /**
-         * Status bar power menu
-         * 0 - disabled (default)
-         * 1 - screen off / power menu
-         * 2 - power menu - screen off
-         * @hide
-         */
-        public static final String STATUS_BAR_POWER_MENU = "status_bar_power_menu";
-
+        
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
@@ -2834,7 +2816,6 @@ public final class Settings {
             VIBRATE_WHEN_RINGING,
             RINGTONE,
             NOTIFICATION_SOUND,
-            STATUS_BAR_SHOW_BATTERY_PERCENT,
             LOCK_TO_APP_ENABLED
         };
 
