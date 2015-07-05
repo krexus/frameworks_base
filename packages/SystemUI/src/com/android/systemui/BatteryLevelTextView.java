@@ -86,7 +86,7 @@ public class BatteryLevelTextView extends TextView implements
     }
 
     @Override
-    public void onBatteryStyleChanged(int style, int percentMode) {
+    public void onBatteryStyleChanged(int style, int percentMode, int percentLowOnly) {
         mStyle = style;
         mPercentMode = percentMode;
         updateVisibility();

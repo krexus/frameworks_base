@@ -51,7 +51,7 @@ public class BatteryMeterView extends View implements DemoMode,
     private final int[] mColors;
 
     protected boolean mShowPercent = true;
-
+    protected boolean mShowPercentLowOnly = false;
     private float mButtonHeightFraction;
     private float mSubpixelSmoothingLeft;
     private float mSubpixelSmoothingRight;
@@ -71,7 +71,7 @@ public class BatteryMeterView extends View implements DemoMode,
 
     private String mWarningString;
     private final int mCriticalLevel;
-
+    private final int mLowLevel;
     private final int mFrameColor;
 
     private boolean mAnimationsEnabled;
@@ -129,6 +129,8 @@ public class BatteryMeterView extends View implements DemoMode,
         mWarningString = context.getString(R.string.battery_meter_very_low_overlay_symbol);
         mCriticalLevel = mContext.getResources().getInteger(
                 com.android.internal.R.integer.config_criticalBatteryWarningLevel);
+        mLowLevel = mContext.getResources().getInteger(
+                com.android.internal.R.integer.config_lowBatteryWarningLevel);                
         mButtonHeightFraction = context.getResources().getFraction(
                 R.fraction.battery_button_height_fraction, 1, 1);
         mSubpixelSmoothingLeft = context.getResources().getFraction(
@@ -222,9 +224,10 @@ public class BatteryMeterView extends View implements DemoMode,
     }
 
     @Override
-    public void onBatteryStyleChanged(int style, int percentMode) {
+    public void onBatteryStyleChanged(int style, int percentMode, int percentLowOnly) {
         boolean showInsidePercent = percentMode == BatteryController.PERCENTAGE_MODE_INSIDE;
         BatteryMeterMode meterMode = BatteryMeterMode.BATTERY_METER_ICON_PORTRAIT;
+        mShowPercentLowOnly = percentLowOnly == 1;
 
         switch (style) {
             case BatteryController.STYLE_CIRCLE:
@@ -591,27 +594,29 @@ public class BatteryMeterView extends View implements DemoMode,
             String pctText = null;
             if (!tracker.plugged && level > mCriticalLevel && (mShowPercent
                     && !(tracker.level == 100 && !SHOW_100_PERCENT))) {
-                mTextPaint.setColor(getColorForLevel(level));
-                final float full = mHorizontal ? 0.60f : 0.45f;
-                final float nofull = mHorizontal ? 0.75f : 0.6f;
-                final float single = mHorizontal ? 0.86f : 0.75f;
-                mTextPaint.setTextSize(height *
-                        (SINGLE_DIGIT_PERCENT ? single
-                                : (tracker.level == 100 ? full : nofull)));
-                mTextHeight = -mTextPaint.getFontMetrics().ascent;
-                pctText = String.valueOf(SINGLE_DIGIT_PERCENT ? (level/10) : level);
-                pctX = mWidth * 0.5f;
-                pctY = (mHeight + mTextHeight) * 0.47f;
-                if (mHorizontal) {
-                    pctOpaque = pctX > levelTop;
-                } else {
-                    pctOpaque = levelTop > pctY;
-                }
-                if (!pctOpaque) {
-                    mTextPath.reset();
-                    mTextPaint.getTextPath(pctText, 0, pctText.length(), pctX, pctY, mTextPath);
-                    // cut the percentage text out of the overall shape
-                    mShapePath.op(mTextPath, Path.Op.DIFFERENCE);
+                if (!mShowPercentLowOnly || level <= mLowLevel) {
+                    mTextPaint.setColor(getColorForLevel(level));
+                    final float full = mHorizontal ? 0.60f : 0.45f;
+                    final float nofull = mHorizontal ? 0.75f : 0.6f;
+                    final float single = mHorizontal ? 0.86f : 0.75f;
+                    mTextPaint.setTextSize(height *
+                            (SINGLE_DIGIT_PERCENT ? single
+                                    : (tracker.level == 100 ? full : nofull)));
+                    mTextHeight = -mTextPaint.getFontMetrics().ascent;
+                    pctText = String.valueOf(SINGLE_DIGIT_PERCENT ? (level/10) : level);
+                    pctX = mWidth * 0.5f;
+                    pctY = (mHeight + mTextHeight) * 0.47f;
+                    if (mHorizontal) {
+                        pctOpaque = pctX > levelTop;
+                    } else {
+                        pctOpaque = levelTop > pctY;
+                    }
+                    if (!pctOpaque) {
+                        mTextPath.reset();
+                        mTextPaint.getTextPath(pctText, 0, pctText.length(), pctX, pctY, mTextPath);
+                        // cut the percentage text out of the overall shape
+                        mShapePath.op(mTextPath, Path.Op.DIFFERENCE);
+                   }     
                 }
             }
 
@@ -823,10 +828,12 @@ public class BatteryMeterView extends View implements DemoMode,
             } else {
                 if (level > mCriticalLevel
                         && (mShowPercent && !(tracker.level == 100 && !SHOW_100_PERCENT))) {
-                    // draw the percentage text
-                    String pctText = String.valueOf(SINGLE_DIGIT_PERCENT ? (level/10) : level);
-                    mTextPaint.setColor(paint.getColor());
-                    canvas.drawText(pctText, textX, mTextY, mTextPaint);
+                    if (!mShowPercentLowOnly || level <= mLowLevel) {    
+                        // draw the percentage text
+                        String pctText = String.valueOf(SINGLE_DIGIT_PERCENT ? (level/10) : level);
+                        mTextPaint.setColor(paint.getColor());
+                        canvas.drawText(pctText, textX, mTextY, mTextPaint);
+                        }
                 } else if (level <= mCriticalLevel) {
                     // draw the warning text
                     canvas.drawText(mWarningString, textX, mTextY, mWarningTextPaint);
