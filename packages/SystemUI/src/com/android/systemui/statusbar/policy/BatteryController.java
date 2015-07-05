@@ -58,6 +58,7 @@ public class BatteryController extends BroadcastReceiver {
 
     private int mStyle;
     private int mPercentMode;
+    private int mPercentLowOnly;
     private int mUserId;
     private SettingsObserver mObserver;
 
@@ -93,7 +94,7 @@ public class BatteryController extends BroadcastReceiver {
     public void addStateChangedCallback(BatteryStateChangeCallback cb) {
         mChangeCallbacks.add(cb);
         cb.onBatteryLevelChanged(mLevel, mPluggedIn, mCharging);
-        cb.onBatteryStyleChanged(mStyle, mPercentMode);
+        cb.onBatteryStyleChanged(mStyle, mPercentMode, mPercentLowOnly);
     }
 
     public void removeStateChangedCallback(BatteryStateChangeCallback cb) {
@@ -153,14 +154,14 @@ public class BatteryController extends BroadcastReceiver {
     private void fireSettingsChanged() {
         final int N = mChangeCallbacks.size();
         for (int i = 0; i < N; i++) {
-            mChangeCallbacks.get(i).onBatteryStyleChanged(mStyle, mPercentMode);
+            mChangeCallbacks.get(i).onBatteryStyleChanged(mStyle, mPercentMode, mPercentLowOnly);
         }
     }
 
     public interface BatteryStateChangeCallback {
         void onBatteryLevelChanged(int level, boolean pluggedIn, boolean charging);
         void onPowerSaveChanged();
-        void onBatteryStyleChanged(int style, int percentMode);
+        void onBatteryStyleChanged(int style, int percentMode, int percentLowOnly);
     }
 
     private final class SettingsObserver extends ContentObserver {
@@ -171,6 +172,8 @@ public class BatteryController extends BroadcastReceiver {
                 Settings.System.getUriFor(Settings.System.STATUS_BAR_BATTERY_STYLE);
         private final Uri PERCENT_URI =
                 Settings.System.getUriFor(Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT);
+        private final Uri PERCENTLOWONLY_URI =
+                Settings.System.getUriFor(Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT_LOW_ONLY);                
 
         public SettingsObserver(Context context, Handler handler) {
             super(handler);
@@ -183,6 +186,7 @@ public class BatteryController extends BroadcastReceiver {
             }
             mResolver.registerContentObserver(STYLE_URI, false, this, mUserId);
             mResolver.registerContentObserver(PERCENT_URI, false, this, mUserId);
+            mResolver.registerContentObserver(PERCENTLOWONLY_URI, false, this, mUserId);            
             mRegistered = true;
 
             update();
@@ -198,6 +202,8 @@ public class BatteryController extends BroadcastReceiver {
                     Settings.System.STATUS_BAR_BATTERY_STYLE, 0, mUserId);
             mPercentMode = Settings.System.getIntForUser(mResolver,
                     Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT, 0, mUserId);
+            mPercentLowOnly = Settings.System.getIntForUser(mResolver,
+                    Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT_LOW_ONLY, 0, mUserId);                    
 
             fireSettingsChanged();
         }

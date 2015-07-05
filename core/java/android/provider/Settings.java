@@ -2821,6 +2821,13 @@ public final class Settings {
          * @hide
          */
         public static final String STATUS_BAR_SHOW_BATTERY_PERCENT = "status_bar_show_battery_percent";
+        
+         /**
+         * Sub-option of battery inside the icon
+         * Hide the battery percentage only when battery level is beyond config_LowBatteryWarningLevel (default: 15)
+         * @hide
+         */
+        public static final String STATUS_BAR_SHOW_BATTERY_PERCENT_LOW_ONLY = "status_bar_show_battery_percent_low_only";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
@@ -2890,7 +2897,8 @@ public final class Settings {
             NOTIFICATION_SOUND,
             LOCK_TO_APP_ENABLED,
             STATUS_BAR_BATTERY_STYLE,
-            STATUS_BAR_SHOW_BATTERY_PERCENT
+            STATUS_BAR_SHOW_BATTERY_PERCENT,
+            STATUS_BAR_SHOW_BATTERY_PERCENT_LOW_ONLY
         };
 
         /**
