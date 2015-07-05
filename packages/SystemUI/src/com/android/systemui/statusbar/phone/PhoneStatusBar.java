@@ -835,7 +835,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 // noop
             }
             @Override
-            public void onBatteryStyleChanged(int style, int percentMode) {
+            public void onBatteryStyleChanged(int style, int percentMode, int percentLowOnly) {
                 // noop
             }
         });
