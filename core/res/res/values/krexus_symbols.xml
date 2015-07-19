@@ -37,4 +37,7 @@
 
   <!-- Enable power button on secured lockscreen -->
   <java-symbol type="bool" name="config_powerButtonLockscreenEnabled" />
+
+  <!-- Show battery percent only when battery is low -->
+  <java-symbol type="integer" name="config_batteryPercentLowOnlyLevel" />
 </resources>
