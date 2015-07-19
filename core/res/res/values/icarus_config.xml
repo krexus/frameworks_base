@@ -31,5 +31,7 @@
     
     <!-- Is the battery LED intrusive? Used to decide if there should be a disable option -->
     <bool name="config_intrusiveBatteryLed">false</bool>
-
+    
+    <!-- Battery level for when "show battery percent only on low battery" is enabled -->
+    <integer name="config_batteryPercentLowOnlyLevel">25</integer>
 </resources>
