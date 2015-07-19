@@ -129,8 +129,7 @@ public class BatteryMeterView extends View implements DemoMode,
         mWarningString = context.getString(R.string.battery_meter_very_low_overlay_symbol);
         mCriticalLevel = mContext.getResources().getInteger(
                 com.android.internal.R.integer.config_criticalBatteryWarningLevel);
-        mLowLevel = mContext.getResources().getInteger(
-                com.android.internal.R.integer.config_lowBatteryWarningLevel);                
+        mLowLevel = mContext.getResources().getInteger(com.android.internal.R.integer.config_batteryPercentLowOnlyLevel);                
         mButtonHeightFraction = context.getResources().getFraction(
                 R.fraction.battery_button_height_fraction, 1, 1);
         mSubpixelSmoothingLeft = context.getResources().getFraction(
