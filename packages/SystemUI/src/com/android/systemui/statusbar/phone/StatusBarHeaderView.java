@@ -137,7 +137,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     private boolean mDetailTransitioning;
 
     private SettingsObserver mSettingsObserver;
-    private boolean mShowBatteryTextExpanded;
 
     public StatusBarHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -353,7 +352,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
             updateSignalClusterDetachment();
         }
         mEmergencyCallsOnly.setVisibility(mExpanded && mShowEmergencyCallsOnly ? VISIBLE : GONE);
-        mBatteryLevel.setForceShown(mExpanded && mShowBatteryTextExpanded);
+        mBatteryLevel.setForceShown(mExpanded);
         mBatteryLevel.setVisibility(View.VISIBLE);
     }
 
@@ -865,23 +864,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         }
 
         public void update() {
-            ContentResolver resolver = mContext.getContentResolver();
-            int currentUserId = ActivityManager.getCurrentUser();
-            int batteryStyle = Settings.System.getIntForUser(resolver,
-                    Settings.System.STATUS_BAR_BATTERY_STYLE, 0, currentUserId);
-            boolean showExpandedBatteryPercentage = Settings.System.getIntForUser(resolver,
-                    Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT, 0, currentUserId) == 0;
-
-            switch (batteryStyle) {
-                case 4: //BATTERY_METER_GONE
-                case 6: //BATTERY_METER_TEXT
-                    showExpandedBatteryPercentage = false;
-                    break;
-                default:
-                    break;
-            }
-
-            mShowBatteryTextExpanded = showExpandedBatteryPercentage;
             updateVisibilities();
             requestCaptureValues();
         }
