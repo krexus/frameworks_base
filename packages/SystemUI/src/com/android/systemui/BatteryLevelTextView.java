@@ -114,14 +114,7 @@ public class BatteryLevelTextView extends TextView implements
     }
 
     private void updateVisibility() {
-        boolean showNextPercent = mPercentMode == BatteryController.PERCENTAGE_MODE_OUTSIDE
-                || (mBatteryCharging && mPercentMode == BatteryController.PERCENTAGE_MODE_INSIDE);
-        if (mStyle == BatteryController.STYLE_GONE) {
-            showNextPercent = false;
-        } else if (mStyle == BatteryController.STYLE_TEXT) {
-            showNextPercent = true;
-        }
-
+        boolean showNextPercent = (mPercentMode == BatteryController.PERCENTAGE_MODE_OUTSIDE) || (mStyle == BatteryController.STYLE_TEXT);
         if (showNextPercent || mForceShow) {
             super.setVisibility(mRequestedVisibility);
         } else {
