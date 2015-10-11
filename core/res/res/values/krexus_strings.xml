@@ -22,4 +22,7 @@
     <string name="reboot_bootloader">Bootloader</string>
     <!-- Button to soft reboot the device, within the Reboot Options dialog -->
     <string name="reboot_soft">Soft reboot</string>
+
+    <!-- kill app long press back -->
+    <string name="app_killed_message">App killed</string>
 </resources>
