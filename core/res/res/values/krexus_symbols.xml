@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2015 Chroma
+     Copyright (C) 2015 Krexus
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -18,5 +18,11 @@
   <!-- Package Manager -->
   <java-symbol type="array" name="config_disabledComponents" />
   <java-symbol type="array" name="config_forceEnabledComponents" />
+
+  <!-- Power menu reboot -->
+  <java-symbol name="reboot_confirm" type="string" />
+  <java-symbol name="reboot_title" type="string" />
+  <java-symbol name="ic_lock_power_reboot" type="drawable" />
+  <java-symbol name="global_action_reboot" type="string" />
 
 </resources>
