@@ -16,12 +16,38 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:sysui="http://schemas.android.com/apk/res-auto"
-                  android:title="@string/other">
+                  android:title="@string/tuner_other_title">
 
     <!-- importance -->
     <Preference
             android:key="power_notification_controls"
             android:title="@string/tuner_full_importance_settings"
             android:fragment="com.android.systemui.tuner.PowerNotificationControlsFragment"/>
+
+    <!-- <Preference
+        android:key="color_transform"
+        android:title="@string/color_and_appearance"
+        android:fragment="com.android.systemui.tuner.ColorAndAppearanceFragment" />
+
+    <PreferenceScreen
+        android:key="volume_and_do_not_disturb"
+        android:title="@string/volume_and_do_not_disturb">
+
+         Action for this is
+             MetricsConstants.ACTION_TUNER_DO_NOT_DISTURB_VOLUME_PANEL -->
+        <com.android.systemui.tuner.TunerSwitch
+            android:key="sysui_show_full_zen"
+            android:title="@string/tuner_full_zen_title"
+            sysui:metricsAction="314" />
+
+        <!-- Action for this is
+             MetricsConstants.ACTION_TUNER_DO_NOT_DISTURB_VOLUME_SHORTCUT -->
+        <com.android.systemui.tuner.TunerSwitch
+            android:key="sysui_volume_down_silent,sysui_volume_up_silent"
+            android:title="@string/volume_dnd_silent"
+            sysui:defValue="true"
+            sysui:metricsAction="315" />
+
+    <!-- </PreferenceScreen> -->
 
 </PreferenceScreen>
