@@ -482,14 +482,20 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
                     Settings.Secure.SELECTED_INPUT_METHOD_SUBTYPE), false, this, userId);
             resolver.registerContentObserver(Settings.Secure.getUriFor(
                     Settings.Secure.SHOW_IME_WITH_HARD_KEYBOARD), false, this, userId);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NAVBAR_IME_SWITCHER), false, this, userId);
             mRegistered = true;
         }
 
         @Override public void onChange(boolean selfChange, Uri uri) {
-            final Uri showImeUri =
+            final Uri showImeNavUri =
+                    Settings.System.getUriFor(Settings.System.NAVBAR_IME_SWITCHER);
+            final Uri showImeHardUri =
                     Settings.Secure.getUriFor(Settings.Secure.SHOW_IME_WITH_HARD_KEYBOARD);
             synchronized (mMethodMap) {
-                if (showImeUri.equals(uri)) {
+		if (showImeNavUri.equals(uri)) {
+		    updateFromSettingsLocked(true);
+                } else if (showImeHardUri.equals(uri)) {
                     updateKeyboardFromSettingsLocked();
                 } else {
                     boolean enabledChanged = false;
@@ -1929,6 +1935,10 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
             // There is no longer an input method set, so stop any current one.
             unbindCurrentMethodLocked(true, false);
         }
+	if (mRes.getBoolean(com.android.internal.R.bool.show_ongoing_ime_switcher)) {
+	mShowOngoingImeSwitcherForPhones = Settings.System.getInt(mContext.getContentResolver(),
+            Settings.System.NAVBAR_IME_SWITCHER, 1) == 1;
+	}
         // Here is not the perfect place to reset the switching controller. Ideally
         // mSwitchingController and mSettings should be able to share the same state.
         // TODO: Make sure that mSwitchingController and mSettings are sharing the
