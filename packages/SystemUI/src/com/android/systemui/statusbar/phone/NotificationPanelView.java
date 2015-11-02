@@ -30,6 +30,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.PowerManager;
 import android.os.UserHandle;
 import android.util.AttributeSet;
 import android.util.MathUtils;
