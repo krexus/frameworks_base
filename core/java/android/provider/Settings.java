@@ -3317,6 +3317,13 @@ public final class Settings {
          */
         public static final String SWAP_VOLUME_BUTTONS = "swap_volume_buttons";
 
+        /**
+        * Whether volume control media sound stream
+        * @hide
+        */
+        public static final String VOLUME_KEY_CONTROL_MEDIA =
+                "volume_key_control_media";
+
          /**
          * Whether to show the IME switcher in the navigation bar
          * @hide
