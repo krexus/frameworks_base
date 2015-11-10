@@ -1698,6 +1698,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         filter = new IntentFilter(Intent.ACTION_USER_SWITCHED);
         context.registerReceiver(mMultiuserReceiver, filter);
 
+        // register for Power menu (GlobalActions) broadcasts
+        filter = new IntentFilter(Intent.ACTION_POWER_MENU);
+        context.registerReceiver(mGlobalActionsReceiver, filter);
+
         // monitor for system gestures
         mSystemGestures = new SystemGesturesPointerEventListener(context,
                 new SystemGesturesPointerEventListener.Callbacks() {
@@ -6249,6 +6253,15 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     mLastSystemUiFlags = 0;
                     updateSystemUiVisibilityLw();
                 }
+            }
+        }
+    };
+
+    BroadcastReceiver mGlobalActionsReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Intent.ACTION_POWER_MENU.equals(intent.getAction())) {
+                powerLongPress();
             }
         }
     };
