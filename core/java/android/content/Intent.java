@@ -2172,6 +2172,11 @@ public class Intent implements Parcelable, Cloneable {
     public static final String ACTION_POWER_DISCONNECTED =
             "android.intent.action.ACTION_POWER_DISCONNECTED";
     /**
+     * Broadcast Action:  The power button was long-pressed, and the Power Menu (global actions) appeared.
+     * @hide
+     */
+    public static final String ACTION_POWER_MENU = "android.intent.action.POWER_MENU";
+    /**
      * Broadcast Action:  Device is shutting down.
      * This is broadcast when the device is being shut down (completely turned
      * off, not sleeping).  Once the broadcast is complete, the final shutdown
