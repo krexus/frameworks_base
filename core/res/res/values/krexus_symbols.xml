@@ -40,4 +40,7 @@
 
   <!-- Show battery percent only when battery is low -->
   <java-symbol type="integer" name="config_batteryPercentLowOnlyLevel" />
+
+  <!-- Vendor warning -->
+  <java-symbol type="string" name="system_error_vendorprint" />
 </resources>
