@@ -320,14 +320,11 @@ public class BatteryMeterView extends View implements DemoMode,
     }
 
     public void setDarkIntensity(float darkIntensity) {
-        int backgroundColor = getBackgroundColor(darkIntensity);
-        int fillColor = getFillColor(darkIntensity);
-        mIconTint = fillColor;
-        // TODO: Fix this.
-        // mFramePaint.setColor(backgroundColor);
-        // mBoltPaint.setColor(fillColor);
-        // mChargeColor = fillColor;
-        invalidate();
+         if (mBatteryMeterDrawable != null) {
+         int backgroundColor = getBackgroundColor(darkIntensity);
+         int fillColor = getFillColor(darkIntensity);
+         mBatteryMeterDrawable.setDarkIntensity(backgroundColor, fillColor);
+        }
     }
 
     private int getBackgroundColor(float darkIntensity) {
@@ -384,6 +381,7 @@ public class BatteryMeterView extends View implements DemoMode,
         void onDraw(Canvas c, BatteryTracker tracker);
         void onSizeChanged(int w, int h, int oldw, int oldh);
         void onDispose();
+	void setDarkIntensity(int backgroundColor, int fillColor);
     }
 
     protected class NormalBatteryMeterDrawable implements BatteryMeterDrawable {
@@ -652,6 +650,15 @@ public class BatteryMeterView extends View implements DemoMode,
         }
 
         @Override
+        public void setDarkIntensity(int backgroundColor, int fillColor) {
+            mIconTint = fillColor;
+            mFramePaint.setColor(backgroundColor);
+            mBoltPaint.setColor(fillColor);
+            mChargeColor = fillColor;
+            invalidate();
+        }
+
+        @Override
         public void onSizeChanged(int w, int h, int oldw, int oldh) {
             mHeight = h;
             mWidth = w;
@@ -767,6 +774,14 @@ public class BatteryMeterView extends View implements DemoMode,
         @Override
         public void onDispose() {
             mDisposed = true;
+        }
+
+        @Override
+        public void setDarkIntensity(int backgroundColor, int fillColor) {
+            mIconTint = fillColor;
+            mBoltPaint.setColor(fillColor);
+            mChargeColor = fillColor;
+            invalidate();
         }
 
         @Override
