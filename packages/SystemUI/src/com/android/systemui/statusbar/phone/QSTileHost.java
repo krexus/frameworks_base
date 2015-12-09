@@ -30,6 +30,7 @@ import android.util.Log;
 import com.android.systemui.R;
 import com.android.systemui.qs.QSTile;
 import com.android.systemui.qs.tiles.AirplaneModeTile;
+import com.android.systemui.qs.tiles.BatterySaverTile;
 import com.android.systemui.qs.tiles.BluetoothTile;
 import com.android.systemui.qs.tiles.CaffeineTile;
 import com.android.systemui.qs.tiles.CastTile;
@@ -305,6 +306,7 @@ public class QSTileHost implements QSTile.Host, Tunable {
         else if (tileSpec.equals(SyncTile.SPEC)) return new SyncTile(this);
         else if (tileSpec.equals(UsbTetherTile.SPEC)) return new UsbTetherTile(this);
         else if (tileSpec.equals(CaffeineTile.SPEC)) return new CaffeineTile(this);
+        else if (tileSpec.equals(BatterySaverTile.SPEC)) return new BatterySaverTile(this);
         else if (tileSpec.startsWith(IntentTile.PREFIX)) return IntentTile.create(this,tileSpec);
         else throw new IllegalArgumentException("Bad tile spec: " + tileSpec);
     }
