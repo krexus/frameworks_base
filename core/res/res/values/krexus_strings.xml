@@ -13,7 +13,7 @@
 
     <!-- Reboot menu -->
     <!-- Reboot Progress Dialog. This is shown if the user chooses to reboot the phone. -->
-    <string name="reboot_progress">Your phone is rebooting\u2026</string>
+    <string name="reboot_progress">Rebooting\u2026</string>
     <!-- Button to reboot the phone, within the Reboot Options dialog -->
     <string name="reboot_reboot">Reboot</string>
     <!-- Button to reboot the phone into recovery, within the Reboot Options dialog -->
