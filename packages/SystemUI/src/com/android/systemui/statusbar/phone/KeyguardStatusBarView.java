@@ -20,6 +20,7 @@ package com.android.systemui.statusbar.phone;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -70,6 +71,9 @@ public class KeyguardStatusBarView extends RelativeLayout {
         mMultiUserSwitch = (MultiUserSwitch) findViewById(R.id.multi_user_switch);
         mMultiUserAvatar = (ImageView) findViewById(R.id.multi_user_avatar);
         mCarrierLabel = (TextView) findViewById(R.id.keyguard_carrier_text);
+        if (isWifiOnly()) {
+            mCarrierLabel.setText("");
+        }
         mBatteryLevel = (BatteryLevelTextView) findViewById(R.id.battery_level_text);
         loadDimens();
         mFastOutSlowInInterpolator = AnimationUtils.loadInterpolator(getContext(),
@@ -155,6 +159,12 @@ public class KeyguardStatusBarView extends RelativeLayout {
         }
         updateVisibilities();
         updateSystemIconsLayoutParams();
+    }
+
+    public boolean isWifiOnly() {
+        ConnectivityManager cm = (ConnectivityManager)getContext().getSystemService(
+                Context.CONNECTIVITY_SERVICE);
+        return (cm.isNetworkSupported(ConnectivityManager.TYPE_MOBILE) == false);
     }
 
     private void animateNextLayoutChange() {
