@@ -761,7 +761,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
 >>>>>>> 23ccef1... SystemUI: Allow QS tile addition and removal
         target.signalClusterAlpha = mSignalClusterDetached ? 0f : 1f;
         target.settingsRotation = !mExpanded ? 90f : 0f;
-        target.qsAddRotation = !mExpanded ? 90f : mQsShowingHidden ? 45f : 0f;
+        target.qsAddRotation = !mExpanded ? 90f : mQsShowingHidden ? -135f : 0f;
     }
 
     private float getAlphaForVisibility(View v) {
@@ -1020,7 +1020,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
             if (mQsShowingHidden == isShowingHidden) return;
             mQsShowingHidden = isShowingHidden;
 
-            final float degRotation = isShowingHidden ? 45f : 0f;
+            final float degRotation = isShowingHidden ? -135f : 0f;
             mExpandedValues.qsAddRotation = degRotation;
             if (mExpanded) {
                 mQsAddButton.rotate(degRotation);

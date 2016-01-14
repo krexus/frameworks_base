@@ -92,7 +92,7 @@ public class LocationTile extends QSTile<QSTile.BooleanState> {
 
     @Override
     protected void handleToggleClick() {
-        final boolean wasEnabled = (Boolean) mState.value;
+        final boolean wasEnabled = mState.value;
         MetricsLogger.action(mContext, getMetricsCategory(), !wasEnabled);
         if(mController.isAdvancedSettingsEnabled()) {
             showDetail(true);
