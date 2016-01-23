@@ -88,13 +88,8 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     private TextView mDateExpanded;
     private LinearLayout mSystemIcons;
     private View mSignalCluster;
-<<<<<<< HEAD
     private View mSettingsButton;
-=======
-    private SettingsButton mSettingsButton;
-    private View mSettingsContainer;
     private QsAddButton mQsAddButton;
->>>>>>> 23ccef1... SystemUI: Allow QS tile addition and removal
     private View mQsDetailHeader;
     private TextView mQsDetailHeaderTitle;
     private Switch mQsDetailHeaderSwitch;
@@ -146,6 +141,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     private float mCurrentT;
     private boolean mShowingDetail;
     private boolean mQsInReorderMode = false;
+    private boolean mQsAbleToShowHidden = false;
     private boolean mQsShowingHidden = false;
     private boolean mDetailTransitioning;
 
@@ -177,12 +173,9 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         mDateExpanded = (TextView) findViewById(R.id.date_expanded);
         mSettingsButton = findViewById(R.id.settings_button);
         mSettingsButton.setOnClickListener(this);
-<<<<<<< HEAD
 	mSettingsButton.setOnLongClickListener(this);
-=======
         mQsAddButton = (QsAddButton) findViewById(R.id.qs_add_button);
         mQsAddButton.setOnClickListener(this);
->>>>>>> 23ccef1... SystemUI: Allow QS tile addition and removal
         mQsDetailHeader = findViewById(R.id.qs_detail_header);
         mQsDetailHeader.setAlpha(0);
         mQsDetailHeaderTitle = (TextView) mQsDetailHeader.findViewById(android.R.id.title);
@@ -430,15 +423,11 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         mDateCollapsed.setVisibility(mExpanded && mAlarmShowing ? View.VISIBLE : View.INVISIBLE);
         mDateExpanded.setVisibility(mExpanded && mAlarmShowing ? View.INVISIBLE : View.VISIBLE);
         mAlarmStatus.setVisibility(mExpanded && mAlarmShowing ? View.VISIBLE : View.INVISIBLE);
-<<<<<<< HEAD
         mSettingsButton.setVisibility(mExpanded ? View.VISIBLE : View.INVISIBLE);
-        mQsDetailHeader.setVisibility(mExpanded && mShowingDetail ? View.VISIBLE : View.INVISIBLE);
-=======
-        mSettingsContainer.setVisibility(mExpanded ? View.VISIBLE : View.INVISIBLE);
-        mQsAddButton.setVisibility(mExpanded ? View.VISIBLE : View.INVISIBLE);
+        mQsAddButton.setVisibility(mExpanded && mQsAbleToShowHidden
+                ? View.VISIBLE : View.INVISIBLE);
         mQsDetailHeader.setVisibility(mExpanded && mShowingDetail? View.VISIBLE : View.INVISIBLE);
         mQsDeleteHeader.setVisibility(mExpanded && mQsInReorderMode ? VISIBLE : INVISIBLE);
->>>>>>> 23ccef1... SystemUI: Allow QS tile addition and removal
         if (mSignalCluster != null) {
             updateSignalClusterDetachment();
         }
@@ -469,11 +458,9 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     private void updateSystemIconsLayoutParams() {
         RelativeLayout.LayoutParams lp = (LayoutParams) mSystemIconsSuperContainer.getLayoutParams();
         int rule = mExpanded
-<<<<<<< HEAD
-                ? mSettingsButton.getId()
-=======
-                ? mQsAddButton.getId()
->>>>>>> 23ccef1... SystemUI: Allow QS tile addition and removal
+                ? mQsAbleToShowHidden
+                        ? mQsAddButton.getId()
+                        : mSettingsContainer.getId()
                 : mMultiUserSwitch.getId();
         if (rule != lp.getRules()[RelativeLayout.START_OF]) {
             lp.addRule(RelativeLayout.START_OF, rule);
@@ -750,15 +737,11 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         target.settingsAlpha = getAlphaForVisibility(mSettingsButton);
         target.settingsTranslation = mExpanded
                 ? 0
-<<<<<<< HEAD
                 : mMultiUserSwitch.getLeft() - mSettingsButton.getLeft();
-=======
-                : mMultiUserSwitch.getLeft() - mSettingsContainer.getLeft();
         target.qsAddAlpha = getAlphaForVisibility(mQsAddButton);
         target.qsAddTranslation = mExpanded
                 ? 0
                 : mMultiUserSwitch.getLeft() - mQsAddButton.getLeft();
->>>>>>> 23ccef1... SystemUI: Allow QS tile addition and removal
         target.signalClusterAlpha = mSignalClusterDetached ? 0f : 1f;
         target.settingsRotation = !mExpanded ? 90f : 0f;
         target.qsAddRotation = !mExpanded ? 90f : mQsShowingHidden ? -135f : 0f;
@@ -811,20 +794,12 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
             mSignalCluster.setTranslationX(0f);
             mSignalCluster.setTranslationY(0f);
         }
-<<<<<<< HEAD
         mSettingsButton.setTranslationY(mSystemIconsSuperContainer.getTranslationY());
         mSettingsButton.setTranslationX(values.settingsTranslation);
         mSettingsButton.setRotation(values.settingsRotation);
-=======
-        if (!mSettingsButton.isAnimating()) {
-            mSettingsContainer.setTranslationY(mSystemIconsSuperContainer.getTranslationY());
-            mSettingsContainer.setTranslationX(values.settingsTranslation);
-            mSettingsButton.setRotation(values.settingsRotation);
-        }
         mQsAddButton.setTranslationY(mSystemIconsSuperContainer.getTranslationY());
         mQsAddButton.setTranslationX(values.qsAddTranslation);
         mQsAddButton.setRotation(values.qsAddRotation);
->>>>>>> 23ccef1... SystemUI: Allow QS tile addition and removal
         applyAlpha(mEmergencyCallsOnly, values.emergencyCallsOnlyAlpha);
         if (!mShowingDetail && !mDetailTransitioning) {
             // Otherwise it needs to stay invisible
@@ -833,12 +808,8 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         applyAlpha(mDateCollapsed, values.dateCollapsedAlpha);
         applyAlpha(mDateExpanded, values.dateExpandedAlpha);
         applyAlpha(mBatteryLevel, values.batteryLevelAlpha);
-<<<<<<< HEAD
         applyAlpha(mSettingsButton, values.settingsAlpha);
-=======
-        applyAlpha(mSettingsContainer, values.settingsAlpha);
         applyAlpha(mQsAddButton, values.qsAddAlpha);
->>>>>>> 23ccef1... SystemUI: Allow QS tile addition and removal
         applyAlpha(mSignalCluster, values.signalClusterAlpha);
         if (!mExpanded) {
             mTime.setScaleX(1f);
@@ -933,6 +904,18 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         }
 
         @Override
+        public void onAbleToShowHidden(final boolean isAbleToShow) {
+            post(new Runnable() {
+
+                @Override
+                public void run() {
+                    handleQsAbleToShowHidden(isAbleToShow);
+                }
+
+            });
+        }
+
+        @Override
         public void onShowingHidden(final boolean isShowingHidden) {
             post(new Runnable() {
 
@@ -1016,6 +999,17 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
             }
         }
 
+        private void handleQsAbleToShowHidden(final boolean isAbleToShow) {
+            if (mQsAbleToShowHidden == isAbleToShow) return;
+            mQsAbleToShowHidden = isAbleToShow;
+
+            mQsAddButton.setVisibility(mExpanded && isAbleToShow
+                    ? View.VISIBLE : View.INVISIBLE);
+            mExpandedValues.qsAddAlpha = isAbleToShow ? 1f : 0f;
+            updateSystemIconsLayoutParams();
+            requestCaptureValues();
+        }
+
         private void handleQsShowingHidden(final boolean isShowingHidden) {
             if (mQsShowingHidden == isShowingHidden) return;
             mQsShowingHidden = isShowingHidden;
@@ -1037,7 +1031,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
             }
             transition(mMultiUserSwitch, !isInReorderMode);
             transition(mSettingsContainer, !isInReorderMode);
-            transition(mQsAddButton, !isInReorderMode);
+            transition(mQsAddButton, !isInReorderMode && mQsAbleToShowHidden);
             transition(mSystemIconsSuperContainer, !isInReorderMode);
             transition(mQsDeleteHeader, isInReorderMode);
             mQsInReorderMode = isInReorderMode;
