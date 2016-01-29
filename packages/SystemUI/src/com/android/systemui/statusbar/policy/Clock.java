@@ -39,6 +39,7 @@ import android.widget.TextView;
 
 import com.android.systemui.DemoMode;
 import com.android.systemui.R;
+import com.android.internal.util.krexus.UserContentObserver;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 
 import java.text.SimpleDateFormat;
@@ -89,12 +90,14 @@ public class Clock extends TextView implements DemoMode {
     private SettingsObserver mSettingsObserver;
     private StatusBarIconController mIconController;
 
-    protected class SettingsObserver extends ContentObserver {
+    protected class SettingsObserver extends UserContentObserver {
         SettingsObserver(Handler handler) {
             super(handler);
         }
 
-        void observe() {
+        @Override
+        protected void observe() {
+            super.observe();
             ContentResolver resolver = mContext.getContentResolver();
             resolver.registerContentObserver(Settings.System
                     .getUriFor(Settings.System.STATUS_BAR_CLOCK),
@@ -118,7 +121,7 @@ public class Clock extends TextView implements DemoMode {
         }
 
         @Override
-        public void onChange(boolean selfChange) {
+        public void update() {
             updateSettings();
         }
     }
