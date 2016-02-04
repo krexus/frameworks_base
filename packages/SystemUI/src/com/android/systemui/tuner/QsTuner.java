@@ -201,6 +201,7 @@ public class QsTuner extends Fragment implements Callback {
         else if (spec.equals("timeout")) return R.string.quick_settings_timeout_label;
         else if (spec.equals("sound")) return R.string.quick_settings_sound_label;
         else if (spec.equals("sync")) return R.string.quick_settings_sync_label;
+        else if (spec.equals("caffeine")) return R.string.quick_settings_caffeine_label;
         return 0;
     }
 
@@ -449,6 +450,7 @@ public class QsTuner extends Fragment implements Callback {
             else if (mSpec.equals("timeout")) return R.drawable.ic_qs_screen_timeout_vector;
             else if (mSpec.equals("sound")) return R.drawable.ic_qs_ringer_audible;
             else if (mSpec.equals("sync")) return R.drawable.ic_qs_sync_on;
+            else if (mSpec.equals("caffeine")) return R.drawable.ic_qs_caffeine_on;
             return R.drawable.android;
         }
 
