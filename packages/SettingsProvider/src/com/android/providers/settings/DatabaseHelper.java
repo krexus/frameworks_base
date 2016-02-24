@@ -2632,10 +2632,8 @@ class DatabaseHelper extends SQLiteOpenHelper {
             }
 
             // Mobile Data default, based on build
-            loadSetting(stmt, Settings.Global.MOBILE_DATA,
-                    "true".equalsIgnoreCase(
-                            SystemProperties.get("ro.com.android.mobiledata",
-                                    "true")) ? 1 : 0);
+            loadBooleanSetting(stmt, Settings.Global.MOBILE_DATA,
+                    R.bool.def_mobile_data_enabled);
 
             loadBooleanSetting(stmt, Settings.Global.NETSTATS_ENABLED,
                     R.bool.def_netstats_enabled);
