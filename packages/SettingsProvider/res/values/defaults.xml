@@ -217,4 +217,7 @@
 
     <!-- Default for Settings.Secure.NFC_PAYMENT_COMPONENT -->
     <string name="def_nfc_payment_component"></string>
+
+    <!-- Default for Settings.Global.MOBILE_DATA -->
+    <bool name="def_mobile_data_enabled">true</bool>
 </resources>
