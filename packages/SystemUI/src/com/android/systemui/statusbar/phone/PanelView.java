@@ -658,7 +658,7 @@ public abstract class PanelView extends FrameLayout {
             }
             mFlingAnimationUtils.apply(animator, mExpandedHeight, target, vel, getHeight());
             if (vel == 0) {
-                animator.setDuration(350);
+                animator.setDuration(400);
             }
         } else {
             mFlingAnimationUtils.applyDismissing(animator, mExpandedHeight, target, vel,
