@@ -68,7 +68,7 @@
     <string name="accessibility_quick_settings_sync_changed_on">Sync turned on.</string>
 
     <!-- Screen timeout tile -->
-    <string name="quick_settings_screen_off">Screen off</string>
+    <string name="quick_settings_screen_off">Power</string>
 
     <!-- Battery Saver Dismiss -->
     <string name="battery_saver_dismiss_title">Dismiss</string>
