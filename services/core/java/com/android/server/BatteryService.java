@@ -149,6 +149,7 @@ public final class BatteryService extends SystemService {
 
     // Disable LED until SettingsObserver can be started
     private boolean mBatteryLedEnabled = false;
+    private boolean mLowBatteryPulse = false;
 
     private boolean mSentLowBatteryBroadcast = false;
 
@@ -832,29 +833,29 @@ public final class BatteryService extends SystemService {
         public void updateLightsLocked() {
             final int level = mBatteryProps.batteryLevel;
             final int status = mBatteryProps.batteryStatus;
-	    if (!mBatteryLedEnabled) {
-	    // Disable all charging battery lights
-	    mBatteryLight.turnOff();
-            } else if (level < mLowBatteryWarningLevel) {
-                 if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
-                     // Solid red when battery is charging
-                     mBatteryLight.setColor(mBatteryLowARGB);
-                 } else {
-                     // Flash red when battery is low and not charging
-                     mBatteryLight.setFlashing(mBatteryLowARGB, Light.LIGHT_FLASH_TIMED,
-                            mBatteryLedOn, mBatteryLedOff);
-                 }
-             } else if (status == BatteryManager.BATTERY_STATUS_CHARGING
-                     || status == BatteryManager.BATTERY_STATUS_FULL) {
-                 if (status == BatteryManager.BATTERY_STATUS_FULL || level >= 90) {
-                     // Solid green when full or charging and nearly full
-                     mBatteryLight.setColor(mBatteryFullARGB);
-                 } else {
+            if (level < mLowBatteryWarningLevel) {
+                if (status == BatteryManager.BATTERY_STATUS_CHARGING && mBatteryLedEnabled) {
+                    // Solid red when battery is charging
+                    mBatteryLight.setColor(mBatteryLowARGB);
+                } else if (mLowBatteryPulse) {
+                    // Flash red when battery is low and not charging
+                    mBatteryLight.setFlashing(mBatteryLowARGB, Light.LIGHT_FLASH_TIMED,
+                           mBatteryLedOn, mBatteryLedOff);
+                } else {
+                    // Battery charging led or low battery pulse are disabled, no lights
+                    mBatteryLight.turnOff();
+                }
+            } else if ((status == BatteryManager.BATTERY_STATUS_CHARGING
+                    || status == BatteryManager.BATTERY_STATUS_FULL) && mBatteryLedEnabled) {
+                if (status == BatteryManager.BATTERY_STATUS_FULL || level >= 90) {
+                    // Solid green when full or charging and nearly full
+                    mBatteryLight.setColor(mBatteryFullARGB);
+                } else {
                     // Solid orange when charging and halfway full
                     mBatteryLight.setColor(mBatteryMediumARGB);
-                 }
-             } else {
-                // No lights if not charging and not low
+                }
+            } else {
+                // No lights if not charging and not low or the relevant setting is not enabled
                 mBatteryLight.turnOff();
             }
         }
@@ -868,9 +869,13 @@ public final class BatteryService extends SystemService {
         void observe() {
             ContentResolver resolver = mContext.getContentResolver();
 
-            // Chargin battery LED light enabled
+            // Charging battery LED light enabled
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.CHARGING_BATTERY_LED), false, this, UserHandle.USER_ALL);
+
+            // Low battery pulse
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.LOW_BATTERY_PULSE), false, this, UserHandle.USER_ALL);
 
             update();
         }
@@ -885,7 +890,11 @@ public final class BatteryService extends SystemService {
 
             // Charging battery LED light enabled
             mBatteryLedEnabled = Settings.System.getInt(resolver,
-                    Settings.System.CHARGING_BATTERY_LED, 1) != 0;
+                    Settings.System.CHARGING_BATTERY_LED, 0) != 0;
+
+            // Low battery pulse
+            mLowBatteryPulse = Settings.System.getInt(resolver,
+                        Settings.System.LOW_BATTERY_PULSE, 1) != 0;
 
             mLed.updateLightsLocked();
         }
