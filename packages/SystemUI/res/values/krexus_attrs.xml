@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  Copyright (C) 2016 Krexus
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+
+<resources>
+
+    <declare-styleable name="BatteryBarController">
+        <attr name="viewLocation" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="BatteryMeterViewDrawable">
+        <attr name="android:gravity"/>
+        <!-- Blending mode used for drawing charging bolt and percentage text -->
+        <attr name="blendMode">
+            <!-- [0, 0] -->
+            <enum name="clear" value="0" />
+            <!-- [Sa, Sc] -->
+            <enum name="src" value="1" />
+            <!-- [Da, Dc] -->
+            <enum name="dst" value="2" />
+            <!-- [Sa + (1 - Sa)*Da, Rc = Sc + (1 - Sa)*Dc] -->
+            <enum name="src_over" value="3" />
+            <!-- [Sa + (1 - Sa)*Da, Rc = Dc + (1 - Da)*Sc] -->
+            <enum name="dst_over" value="4" />
+            <!-- [Sa * Da, Sc * Da] -->
+            <enum name="src_in" value="5" />
+            <!-- [Sa * Da, Sa * Dc] -->
+            <enum name="dst_in" value="6" />
+            <!-- [Sa * (1 - Da), Sc * (1 - Da)] -->
+            <enum name="src_out" value="7" />
+            <!-- [Da * (1 - Sa), Dc * (1 - Sa)] -->
+            <enum name="dst_out" value="8" />
+            <!-- [Da, Sc * Da + (1 - Sa) * Dc] -->
+            <enum name="src_atop" value="9" />
+            <!-- [Sa, Sa * Dc + Sc * (1 - Da)] -->
+            <enum name="dst_atop" value="10" />
+            <!-- [Sa + Da - 2 * Sa * Da, Sc * (1 - Da) + (1 - Sa) * Dc] -->
+            <enum name="xor" value="11" />
+            <!-- Saturate(S + D) -->
+            <enum name="add" value="12" />
+            <!-- [Sa * Da, Sc * Dc] -->
+            <enum name="multiply" value="13" />
+            <!-- [Sa + Da - Sa * Da, Sc + Dc - Sc * Dc] -->
+            <enum name="screen" value="14" />
+            <!-- Draw on top without any blending operations performed -->
+            <enum name="overlay" value="15" />
+            <!-- [Sa + Da - Sa*Da, Sc*(1 - Da) + Dc*(1 - Sa) + min(Sc, Dc)] -->
+            <enum name="darken" value="16" />
+        </attr>
+    </declare-styleable>
+
+</resources>
