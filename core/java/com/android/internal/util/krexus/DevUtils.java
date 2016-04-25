@@ -11,6 +11,8 @@ import android.os.RemoteException;
 import android.os.UserHandle;
 import android.provider.Settings;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.List;
 
 public class DevUtils {
@@ -60,4 +62,19 @@ public class DevUtils {
         }
         return targetKilled;
     }
+
+    public static boolean isKernelGoogleStock() {
+        //Find kernel version, by reading proc/version
+        boolean kernelStock = true;
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("/proc/version"), 256);
+            String version = reader.readLine();
+            kernelStock = version.contains("google.com");
+            // close the reader
+            reader.close();
+        } catch (Exception e) {
+        // This will catch any exceptions
+        }
+        return kernelStock;
+   }
 }
