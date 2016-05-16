@@ -1794,8 +1794,8 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
                 }
                 final int rotation = getWindowManager().getDefaultDisplay().getRotation();
                 final Configuration config = getContext().getResources().getConfiguration();
-                final boolean swapKeys = Settings.System.getInt(getContext().getContentResolver(),
-                        Settings.System.SWAP_VOLUME_BUTTONS, 1) == 1;
+                final boolean swapKeys = Settings.System.getIntForUser(getContext().getContentResolver(),
+                        Settings.System.SWAP_VOLUME_BUTTONS, 1, UserHandle.USER_CURRENT_OR_SELF) == 1;
 
                 if (swapKeys
                         && (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_180)
