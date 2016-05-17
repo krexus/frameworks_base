@@ -119,12 +119,7 @@
 
     <!-- The default tiles to display in QuickSettings -->
     <string name="quick_settings_tiles_default" translatable="false">
-<<<<<<< HEAD
-        wifi,bt,cell,location,rotation,dnd,flashlight,cast,timeout,airplane,sound,sync,inversion,screenoff,hotspot
-=======
-        wifi,bt,inversion,dnd,cell,airplane,rotation,flashlight,location,cast,hotspot,usb_tether,ambient_display,screenshot
->>>>>>> 03c3354... Add Screenshot QS Tile
-    </string>
+        wifi,bt,cell,location,rotation,dnd,flashlight,cast,timeout,airplane,sound,sync,inversion,screenoff,hotspot,screenshot
 
     <!-- The tiles to display in QuickSettings -->
     <string name="quick_settings_tiles" translatable="false">wifi,bt,cell,location,rotation,dnd,flashlight,cast</string>
