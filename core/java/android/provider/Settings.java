@@ -3231,12 +3231,6 @@ public final class Settings {
         public static final Validator LOCKSCREEN_SOUNDS_ENABLED_VALIDATOR = sBooleanValidator;
 
         /**
-	 * whether to enable /disable showing charging current on lockscreen
-	 * @hide
-	 */
-	public static final String LOCKSCREEN_SHOW_CURRENT = "lockscreen_show_current";
-
-        /**
          * Whether the lockscreen should be completely disabled.
          * @hide
          */
