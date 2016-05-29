@@ -119,8 +119,7 @@
 
     <!-- The default tiles to display in QuickSettings -->
     <string name="quick_settings_tiles_default" translatable="false">
-        wifi,bt,cell,location,rotation,dnd,flashlight,cast,timeout,airplane,sound,sync,inversion,screenoff,hotspot
-    </string>
+        wifi,bt,cell,location,rotation,dnd,flashlight,cast,timeout,airplane,sound,sync,inversion,screenoff,hotspot,screenshot</string>
 
     <!-- The tiles to display in QuickSettings -->
     <string name="quick_settings_tiles" translatable="false">wifi,bt,cell,location,rotation,dnd,flashlight,cast</string>
