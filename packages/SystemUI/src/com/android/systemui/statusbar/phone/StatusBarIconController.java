@@ -85,7 +85,6 @@ public class StatusBarIconController implements Tunable {
     private LinearLayout mCenterClockLayout;
     private Clock mCenterClock;
     private Clock mLeftClock;
-    private boolean mShowClock;
     private int mClockLocation;
 
     private int mIconSize;
@@ -285,29 +284,25 @@ public class StatusBarIconController implements Tunable {
 
     public void setClockVisibility(boolean visible) {
         ContentResolver resolver = mContext.getContentResolver();
-        boolean showClock = (Settings.System.getIntForUser(
-                resolver, Settings.System.STATUS_BAR_CLOCK, 1,
-                UserHandle.USER_CURRENT) == 1);
         int clockLocation = Settings.System.getIntForUser(
-                resolver, Settings.System.STATUSBAR_CLOCK_STYLE, 0,
+                resolver, Settings.System.STATUSBAR_CLOCK_STYLE, 1,
                 UserHandle.USER_CURRENT);
-        if (clockLocation == 0 && mClock != null) {
-            mClock.setVisibility(visible ? (showClock ? View.VISIBLE : View.GONE) : View.GONE);
+        if (clockLocation == 1 && mClock != null) {
+            mClock.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
-        if (clockLocation == 1 && mCenterClock != null) {
-            mCenterClock.setVisibility(visible ? (showClock ? View.VISIBLE : View.GONE) : View.GONE);
+        if (clockLocation == 2 && mCenterClock != null) {
+            mCenterClock.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
-        if (clockLocation == 2 && mLeftClock != null) {
-            mLeftClock.setVisibility(visible ? (showClock ? View.VISIBLE : View.GONE) : View.GONE);
+        if (clockLocation == 3 && mLeftClock != null) {
+            mLeftClock.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
     }
 
-    public void setClockAndDateStatus(int width, int mode, boolean enabled) {
+    public void setClockAndDateStatus(int width, int mode) {
         if (mNotificationIcons != null) {
-            mNotificationIcons.setClockAndDateStatus(width, mode, enabled);
+            mNotificationIcons.setClockAndDateStatus(width, mode);
         }
         mClockLocation = mode;
-        mShowClock = enabled;
     }
 
     public void dump(PrintWriter pw) {
