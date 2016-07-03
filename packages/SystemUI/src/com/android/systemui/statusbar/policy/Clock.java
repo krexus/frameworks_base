@@ -75,9 +75,10 @@ public class Clock extends TextView implements DemoMode {
     public static final int CLOCK_DATE_STYLE_LOWERCASE = 1;
     public static final int CLOCK_DATE_STYLE_UPPERCASE = 2;
 
-    public static final int STYLE_CLOCK_RIGHT   = 0;
-    public static final int STYLE_CLOCK_CENTER  = 1;
-    public static final int STYLE_CLOCK_LEFT    = 2;
+    public static final int STYLE_CLOCK_GONE    = 0;
+    public static final int STYLE_CLOCK_RIGHT   = 1;
+    public static final int STYLE_CLOCK_CENTER  = 2;
+    public static final int STYLE_CLOCK_LEFT    = 3;
 
     public static final int STYLE_DATE_LEFT  = 0;
     public static final int STYLE_DATE_RIGHT = 1;
@@ -85,7 +86,6 @@ public class Clock extends TextView implements DemoMode {
     protected int mClockDateDisplay = CLOCK_DATE_DISPLAY_GONE;
     protected int mClockDateStyle = CLOCK_DATE_STYLE_REGULAR;
     protected int mClockStyle = STYLE_CLOCK_RIGHT;
-    protected boolean mShowClock;
     private int mClockAndDateWidth;
 
     private int mAmPmStyle;
@@ -102,9 +102,6 @@ public class Clock extends TextView implements DemoMode {
         protected void observe() {
             super.observe();
             ContentResolver resolver = mContext.getContentResolver();
-            resolver.registerContentObserver(Settings.System
-                    .getUriFor(Settings.System.STATUS_BAR_CLOCK),
-                    false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System
                     .getUriFor(Settings.System.STATUSBAR_CLOCK_AM_PM_STYLE),
                     false, this, UserHandle.USER_ALL);
@@ -351,10 +348,6 @@ public class Clock extends TextView implements DemoMode {
     protected void updateSettings() {
         ContentResolver resolver = mContext.getContentResolver();
 
-        mShowClock = Settings.System.getIntForUser(resolver,
-                Settings.System.STATUS_BAR_CLOCK, 1,
-                UserHandle.USER_CURRENT) == 1;
-
         boolean is24hour = DateFormat.is24HourFormat(mContext);
         int amPmStyle = Settings.System.getIntForUser(resolver,
                 Settings.System.STATUSBAR_CLOCK_AM_PM_STYLE,
@@ -379,13 +372,13 @@ public class Clock extends TextView implements DemoMode {
         }
 
         if (mIconController != null) {
-            mIconController.setClockAndDateStatus(mClockAndDateWidth, mClockStyle, mShowClock);
+            mIconController.setClockAndDateStatus(mClockAndDateWidth, mClockStyle);
         }
 
     }
 
     protected void updateClockVisibility() {
-        if (mClockStyle == STYLE_CLOCK_RIGHT && mShowClock) {
+        if (mClockStyle == STYLE_CLOCK_RIGHT) {
             setVisibility(View.VISIBLE);
         } else {
             setVisibility(View.GONE);
@@ -427,7 +420,7 @@ public class Clock extends TextView implements DemoMode {
         super.onSizeChanged(xNew, yNew, xOld, yOld);
         mClockAndDateWidth = xNew;
         if (mIconController != null) {
-            mIconController.setClockAndDateStatus(mClockAndDateWidth, mClockStyle, mShowClock);
+            mIconController.setClockAndDateStatus(mClockAndDateWidth, mClockStyle);
         }
     }
 

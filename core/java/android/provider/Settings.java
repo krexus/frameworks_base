@@ -3476,14 +3476,6 @@ public final class Settings {
         public static final String BATTERY_SAVER_MODE_COLOR = "battery_save_mode_color";
 
         /**
-         * Show or hide clock
-         * 0 - hide
-         * 1 - show (default)
-         * @hide
-         */
-        public static final String STATUS_BAR_CLOCK = "status_bar_clock";
-
-        /**
          * AM/PM Style for clock options
          * 0 - Normal AM/PM
          * 1 - Small AM/PM
@@ -3494,9 +3486,10 @@ public final class Settings {
 
         /**
          * Style of clock
-         * 0 - Right Clock
-         * 1 - Center Clock
-         * 2 - Left Clock
+         * 0 - No Clock
+         * 1 - Right Clock
+         * 2 - Center Clock
+         * 3 - Left Clock
          * @hide
          */
         public static final String STATUSBAR_CLOCK_STYLE = "statusbar_clock_style";
