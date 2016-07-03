@@ -3650,14 +3650,6 @@ public final class Settings {
          */
         public static final String VOLUME_ROCKER_WAKE = "volume_rocker_wake";
 
-         /**
-         * Show or hide clock
-         * 0 - hide
-         * 1 - show (default)
-         * @hide
-         */
-        public static final String STATUS_BAR_CLOCK = "status_bar_clock";
-
         /**
          * Whether to show seconds next to clock in status bar
          * default: off
@@ -3676,9 +3668,10 @@ public final class Settings {
 
         /**
          * Style of clock
-         * 0 - Right Clock
-         * 1 - Center Clock
-         * 2 - Left Clock
+         * 0 - No Clock
+         * 1 - Right Clock
+         * 2 - Center Clock
+         * 3 - Left Clock
          * @hide
          */
         public static final String STATUSBAR_CLOCK_STYLE = "statusbar_clock_style";

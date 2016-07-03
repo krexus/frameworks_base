@@ -211,11 +211,10 @@ public class NotificationIconAreaController {
         }
     }
 
-    public void setClockAndDateStatus(int width, int mode, boolean enabled) {
+    public void setClockAndDateStatus(int width, int mode) {
         if (mNotificationIcons != null) {
-            mNotificationIcons.setClockAndDateStatus(width, mode, enabled);
+            mNotificationIcons.setClockAndDateStatus(width, mode);
         }
         mClockLocation = mode;
-        mShowClock = enabled;
     }
 }
