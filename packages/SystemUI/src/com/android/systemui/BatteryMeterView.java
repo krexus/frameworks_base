@@ -566,10 +566,12 @@ public class BatteryMeterView extends View implements DemoMode,
             final int level = tracker.level;
             if (level > mCriticalLevel
                     && (mShowPercent && !(level == 100 && !SHOW_100_PERCENT))) {
-                // draw the percentage text
-                String pctText = String.valueOf(SINGLE_DIGIT_PERCENT ? (level/10) : level);
-                mTextAndBoltPaint.setColor(getColorForLevel(level));
-                canvas.drawText(pctText, mTextX, mTextY, mTextAndBoltPaint);
+                if (!mShowPercentLowOnly || level <= mLowLevel) {
+                    // draw the percentage text
+                    String pctText = String.valueOf(SINGLE_DIGIT_PERCENT ? (level/10) : level);
+                    mTextAndBoltPaint.setColor(getColorForLevel(level));
+                    canvas.drawText(pctText, mTextX, mTextY, mTextAndBoltPaint);
+                }
             } else if (level <= mCriticalLevel) {
                 // draw the warning text
                 canvas.drawText(mWarningString, mTextX, mTextY, mWarningTextPaint);
