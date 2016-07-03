@@ -75,6 +75,7 @@ public class BatteryMeterDrawable extends Drawable implements
     private final int mIntrinsicHeight;
 
     private boolean mShowPercent;
+    protected boolean mShowPercentLowOnly;
     private float mButtonHeightFraction;
     private float mSubpixelSmoothingLeft;
     private float mSubpixelSmoothingRight;
@@ -86,6 +87,7 @@ public class BatteryMeterDrawable extends Drawable implements
     private int mWidth;
     private String mWarningString;
     private final int mCriticalLevel;
+    private final int mLowLevel;
     private int mChargeColor;
     private int mStyle;
     private boolean mBoltOverlay;
@@ -166,9 +168,12 @@ public class BatteryMeterDrawable extends Drawable implements
         levels.recycle();
         colors.recycle();
         updateShowPercent();
+        updateShowPercentLowOnly();
         mWarningString = context.getString(R.string.battery_meter_very_low_overlay_symbol);
         mCriticalLevel = mContext.getResources().getInteger(
                 com.android.internal.R.integer.config_criticalBatteryWarningLevel);
+        mLowLevel = mContext.getResources().getInteger(
+                com.android.internal.R.integer.config_batteryPercentLowOnlyLevel);
         mButtonHeightFraction = context.getResources().getFraction(
                 R.fraction.battery_button_height_fraction, 1, 1);
         mSubpixelSmoothingLeft = context.getResources().getFraction(
@@ -237,7 +242,11 @@ public class BatteryMeterDrawable extends Drawable implements
         mContext.getContentResolver().registerContentObserver(
                 Settings.Secure.getUriFor(Settings.Secure.STATUS_BAR_SHOW_BATTERY_PERCENT),
                 false, mSettingObserver);
+        mContext.getContentResolver().registerContentObserver(
+                Settings.Secure.getUriFor(Settings.Secure.STATUS_BAR_SHOW_BATTERY_PERCENT_LOW_ONLY),
+                false, mSettingObserver);
         updateShowPercent();
+        updateShowPercentLowOnly();
         mBatteryController.addStateChangedCallback(this);
     }
 
@@ -321,6 +330,11 @@ public class BatteryMeterDrawable extends Drawable implements
     private void updateShowPercent() {
         mShowPercent = Settings.Secure.getInt(mContext.getContentResolver(),
                 Settings.Secure.STATUS_BAR_SHOW_BATTERY_PERCENT, 0) == 1;
+    }
+
+    private void updateShowPercentLowOnly() {
+        mShowPercentLowOnly = Settings.Secure.getInt(mContext.getContentResolver(),
+                Settings.Secure.STATUS_BAR_SHOW_BATTERY_PERCENT_LOW_ONLY, 0) == 1;
     }
 
     private int getColorForLevel(int percent) {
@@ -426,6 +440,7 @@ public class BatteryMeterDrawable extends Drawable implements
         public void onChange(boolean selfChange, Uri uri) {
             super.onChange(selfChange, uri);
             updateShowPercent();
+            updateShowPercentLowOnly();
             postInvalidate();
         }
     }
@@ -666,12 +681,14 @@ public class BatteryMeterDrawable extends Drawable implements
     private void drawPercentageText(Canvas canvas) {
         final int level = mLevel;
         if (level > mCriticalLevel && mShowPercent && level != 100) {
-            // Draw the percentage text
-            String pctText = String.valueOf(SINGLE_DIGIT_PERCENT ? (level / 10) : level);
-            mTextAndBoltPaint.setColor(getColorForLevel(level));
-            canvas.drawText(pctText, mTextX, mTextY, mTextAndBoltPaint);
-            if (mBoltOverlay) {
-                mBoltDrawable.setTint(getBoltColor());
+            if (!mShowPercentLowOnly || level <= mLowLevel) {
+                // Draw the percentage text
+                String pctText = String.valueOf(SINGLE_DIGIT_PERCENT ? (level / 10) : level);
+                mTextAndBoltPaint.setColor(getColorForLevel(level));
+                canvas.drawText(pctText, mTextX, mTextY, mTextAndBoltPaint);
+                if (mBoltOverlay) {
+                    mBoltDrawable.setTint(getBoltColor());
+                }
             }
         } else if (level <= mCriticalLevel) {
             // Draw the warning text
