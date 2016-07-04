@@ -56,6 +56,7 @@ public class BatteryMeterView extends View implements DemoMode,
 
     protected boolean mShowPercent = true;
     protected boolean mShowPercentLowOnly = false;
+    public boolean hidePercentOnExpanded;
 
     public enum BatteryMeterMode {
         BATTERY_METER_GONE,
@@ -566,7 +567,7 @@ public class BatteryMeterView extends View implements DemoMode,
             final int level = tracker.level;
             if (level > mCriticalLevel
                     && (mShowPercent && !(level == 100 && !SHOW_100_PERCENT))) {
-                if (!mShowPercentLowOnly || level <= mLowLevel) {
+                if (!hidePercentOnExpanded && (!mShowPercentLowOnly || level <= mLowLevel)) {
                     // draw the percentage text
                     String pctText = String.valueOf(SINGLE_DIGIT_PERCENT ? (level/10) : level);
                     mTextAndBoltPaint.setColor(getColorForLevel(level));

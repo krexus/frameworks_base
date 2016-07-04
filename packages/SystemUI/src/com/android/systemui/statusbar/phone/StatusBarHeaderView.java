@@ -93,6 +93,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     private Switch mQsDetailHeaderSwitch;
     private ImageView mQsDetailHeaderProgress;
     private TextView mEmergencyCallsOnly;
+    private BatteryMeterView mBatteryMeter;
     private BatteryLevelTextView mBatteryLevel;
     private TextView mAlarmStatus;
 
@@ -173,6 +174,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         mQsDetailHeaderSwitch = (Switch) mQsDetailHeader.findViewById(android.R.id.toggle);
         mQsDetailHeaderProgress = (ImageView) findViewById(R.id.qs_detail_header_progress);
         mEmergencyCallsOnly = (TextView) findViewById(R.id.header_emergency_calls_only);
+        mBatteryMeter = (BatteryMeterView) findViewById(R.id.battery);
         mBatteryLevel = (BatteryLevelTextView) findViewById(R.id.battery_level_text);
         mAlarmStatus = (TextView) findViewById(R.id.alarm_status);
         mAlarmStatus.setOnClickListener(this);
@@ -302,7 +304,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
 
     public void setBatteryController(BatteryController batteryController) {
         mBatteryController = batteryController;
-        ((BatteryMeterView) findViewById(R.id.battery)).setBatteryController(batteryController);
+        mBatteryMeter.setBatteryController(batteryController);
         mBatteryLevel.setBatteryController(batteryController);
     }
 
@@ -365,6 +367,8 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
             updateSignalClusterDetachment();
         }
         mEmergencyCallsOnly.setVisibility(mExpanded && mShowEmergencyCallsOnly ? VISIBLE : GONE);
+        mBatteryMeter.hidePercentOnExpanded = mExpanded;
+        mBatteryMeter.invalidate();
         mBatteryLevel.setForceShown(mExpanded);
         mBatteryLevel.setVisibility(View.VISIBLE);
     }
