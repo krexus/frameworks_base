@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2010 The Android Open Source Project
+ * Copyright (C) 2016 Krexus
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +37,7 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -331,36 +333,44 @@ public class RecoverySystem {
      * @throws IOException  if writing the recovery command file
      * fails, or if the reboot itself fails.
      */
-    public static void installPackage(Context context, File packageFile)
+    public static void installPackage(Context context, File... packageFiles)
         throws IOException {
-        String filename = packageFile.getCanonicalPath();
 
         final String cryptoStatus = SystemProperties.get("ro.crypto.state", "unsupported");
         final boolean isEncrypted = "encrypted".equalsIgnoreCase(cryptoStatus);
 
-        if (isEncrypted) {
-            FileWriter uncryptFile = new FileWriter(UNCRYPT_FILE);
-            try {
-                uncryptFile.write(filename + "\n");
-            } finally {
-                uncryptFile.close();
-            }
-            // UNCRYPT_FILE needs to be readable by system server on bootup.
-            if (!UNCRYPT_FILE.setReadable(true, false)) {
-                Log.e(TAG, "Error setting readable for " + UNCRYPT_FILE.getCanonicalPath());
-            }
-            Log.w(TAG, "!!! REBOOTING TO INSTALL " + filename + " !!!");
+        List<String> filenames = new ArrayList<String>();
+        List<String> filenameArgsList = new ArrayList<String>();
+        for (File packageFile : packageFiles) {
+            String filename = packageFile.getCanonicalPath();
+            filenames.add(filename);
 
-            // If the package is on the /data partition, write the block map file
-            // into COMMAND_FILE instead.
-            if (filename.startsWith("/data/")) {
-                filename = "@/cache/recovery/block.map";
+            if (isEncrypted) {
+                FileWriter uncryptFile = new FileWriter(UNCRYPT_FILE);
+                try {
+                    uncryptFile.write(filename + "\n");
+                } finally {
+                   uncryptFile.close();
+                }
+                // UNCRYPT_FILE needs to be readable by system server on bootup.
+                if (!UNCRYPT_FILE.setReadable(true, false)) {
+                    Log.e(TAG, "Error setting readable for " + UNCRYPT_FILE.getCanonicalPath());
+                }
+                Log.w(TAG, "!!! REBOOTING TO INSTALL " + filename + " !!!");
+
+                // If the package is on the /data partition, write the block map file
+                // into COMMAND_FILE instead.
+                if (filename.startsWith("/data/")) {
+                   filename = "@/cache/recovery/block.map";
+                }
             }
+            filenameArgsList.add("--update_package=" + filename);
         }
-
-        final String filenameArg = "--update_package=" + filename;
         final String localeArg = "--locale=" + Locale.getDefault().toString();
-        bootCommand(context, filenameArg, localeArg);
+        filenameArgsList.add(localeArg);
+
+        String[] filenameArgs = filenameArgsList.toArray(new String[filenameArgsList.size()]);
+        bootCommand(context, filenameArgs);
     }
 
     /**
