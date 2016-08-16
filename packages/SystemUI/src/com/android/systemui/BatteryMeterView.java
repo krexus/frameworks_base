@@ -63,6 +63,7 @@ public class BatteryMeterView extends View implements DemoMode,
         BATTERY_METER_ICON_PORTRAIT,
         BATTERY_METER_ICON_LANDSCAPE,
         BATTERY_METER_CIRCLE,
+        BATTERY_METER_FULL_CIRCLE,
         BATTERY_METER_TEXT
     }
 
@@ -217,6 +218,9 @@ public class BatteryMeterView extends View implements DemoMode,
         switch (style) {
             case BatteryController.STYLE_CIRCLE:
                 meterMode = BatteryMeterMode.BATTERY_METER_CIRCLE;
+                break;
+            case BatteryController.STYLE_FULL_CIRCLE:
+                meterMode = BatteryMeterMode.BATTERY_METER_FULL_CIRCLE;
                 break;
             case BatteryController.STYLE_GONE:
                 meterMode = BatteryMeterMode.BATTERY_METER_GONE;
@@ -451,9 +455,11 @@ public class BatteryMeterView extends View implements DemoMode,
         public void setDarkIntensity(int backgroundColor, int fillColor) {
             mIconTint = fillColor;
             // Make bolt fully opaque for increased visibility
-            mBoltDrawable.setTint(0xff000000 | fillColor);
             mFrameDrawable.setTint(backgroundColor);
-            updateBoltDrawableLayer(mBatteryDrawable, mBoltDrawable);
+            if (mBoltDrawable != null) {
+               mBoltDrawable.setTint(0xff000000 | fillColor);
+               updateBoltDrawableLayer(mBatteryDrawable, mBoltDrawable);
+            }
             invalidate();
         }
 
@@ -481,15 +487,9 @@ public class BatteryMeterView extends View implements DemoMode,
             final LayerDrawable layerDrawable = (LayerDrawable) batteryDrawable;
             final Drawable frame = layerDrawable.findDrawableByLayerId(R.id.battery_frame);
             final Drawable level = layerDrawable.findDrawableByLayerId(R.id.battery_fill);
-            final Drawable bolt = layerDrawable.findDrawableByLayerId(
-                    R.id.battery_charge_indicator);
             // now check that the required layers exist and are of the correct type
             if (frame == null) {
                 throw new BatteryMeterDrawableException("Missing battery_frame drawble");
-            }
-            if (bolt == null) {
-                throw new BatteryMeterDrawableException(
-                        "Missing battery_charge_indicator drawable");
             }
             if (level != null) {
                 // check that the level drawable is an AnimatedVectorDrawable
@@ -536,14 +536,16 @@ public class BatteryMeterView extends View implements DemoMode,
 
             // Make sure we don't draw the charge indicator if not plugged in
             Drawable d = mBatteryDrawable.findDrawableByLayerId(R.id.battery_charge_indicator);
-            if (d instanceof BitmapDrawable) {
-                // In case we are using a BitmapDrawable, which we should be unless something bad
-                // happened, we need to change the paint rather than the alpha in case the blendMode
-                // has been set to clear.  Clear always clears regardless of alpha level ;)
-                BitmapDrawable bd = (BitmapDrawable) d;
-                bd.getPaint().set(tracker.plugged ? mTextAndBoltPaint : mClearPaint);
-            } else {
-                d.setAlpha(tracker.plugged ? 255 : 0);
+            if (d != null) {
+                if (d instanceof BitmapDrawable) {
+                    // In case we are using a BitmapDrawable, which we should be unless something bad
+                    // happened, we need to change the paint rather than the alpha in case the blendMode
+                    // has been set to clear.  Clear always clears regardless of alpha level ;)
+                    BitmapDrawable bd = (BitmapDrawable) d;
+                    bd.getPaint().set(tracker.plugged ? mTextAndBoltPaint : mClearPaint);
+                } else {
+                    d.setAlpha(tracker.plugged ? 255 : 0);
+                }
             }
 
             // Now draw the level indicator
@@ -623,7 +625,9 @@ public class BatteryMeterView extends View implements DemoMode,
                 mTextY = widthDiv2 + bounds.height() / 2.0f;
             }
 
-            updateBoltDrawableLayer(mBatteryDrawable, mBoltDrawable);
+            if (mBoltDrawable != null) {
+                updateBoltDrawableLayer(mBatteryDrawable, mBoltDrawable);
+            }
 
             mInitialized = true;
         }
@@ -634,6 +638,8 @@ public class BatteryMeterView extends View implements DemoMode,
                     return R.drawable.ic_battery_landscape;
                 case BATTERY_METER_CIRCLE:
                     return R.drawable.ic_battery_circle;
+                case BATTERY_METER_FULL_CIRCLE:
+                    return R.drawable.ic_battery_full_circle;
                 case BATTERY_METER_ICON_PORTRAIT:
                     return R.drawable.ic_battery_portrait;
                 default:
@@ -647,6 +653,8 @@ public class BatteryMeterView extends View implements DemoMode,
                     return R.style.BatteryMeterViewDrawable_Landscape;
                 case BATTERY_METER_CIRCLE:
                     return R.style.BatteryMeterViewDrawable_Circle;
+                case BATTERY_METER_FULL_CIRCLE:
+                    return R.style.BatteryMeterViewDrawable_FullCircle;
                 case BATTERY_METER_ICON_PORTRAIT:
                     return R.style.BatteryMeterViewDrawable_Portrait;
                 default:
