@@ -462,7 +462,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         int rule = mExpanded
                 ? mQsAbleToShowHidden
                         ? mQsAddButton.getId()
-                        : mSettingsContainer.getId()
+                        : mSettingsButton.getId()
                 : mMultiUserSwitch.getId();
         if (rule != lp.getRules()[RelativeLayout.START_OF]) {
             lp.addRule(RelativeLayout.START_OF, rule);
@@ -1032,7 +1032,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
                 transition(mAlarmStatus, !isInReorderMode && !mShowingDetail);
             }
             transition(mMultiUserSwitch, !isInReorderMode);
-            transition(mSettingsContainer, !isInReorderMode);
+            transition(mSettingsButton, !isInReorderMode);
             transition(mEmergencyCallsOnly, !isInReorderMode && mShowEmergencyCallsOnly);
             transition(mQsAddButton, !isInReorderMode && mQsAbleToShowHidden);
             transition(mBatteryMeter, !isInReorderMode);
