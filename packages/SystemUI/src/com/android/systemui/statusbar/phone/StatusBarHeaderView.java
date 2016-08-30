@@ -624,22 +624,12 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
             startDateLongClickActivity();
         } else if (v == mMultiUserSwitch) {
             startUserLongClickActivity();
-	} else if (v == mSettingsButton) {
-	    startSettingsLongClickActivity();
-        }
         return false;
     }
 
     private void startSettingsActivity() {
         mActivityStarter.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS),
                 true /* dismissShade */);
-    }
-
-    private void startSettingsLongClickActivity() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.setClassName("com.android.systemui",
-            "com.android.systemui.tuner.QsActivity");
-        mActivityStarter.startActivity(intent, true /* dismissShade */);
     }
 
     private void startBatteryActivity() {
