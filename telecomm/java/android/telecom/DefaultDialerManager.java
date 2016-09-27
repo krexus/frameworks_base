@@ -17,6 +17,7 @@ package android.telecom;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -115,7 +116,10 @@ public class DefaultDialerManager {
      * @hide
      * */
     public static String getDefaultDialerApplication(Context context, int user) {
-        String defaultPackageName = Settings.Secure.getStringForUser(context.getContentResolver(),
+         Resources r = context.getResources();
+         String defaultPackageName =
+                    r.getString(com.android.internal.R.string.default_dialer_application);
+        String chosenPackageName = Settings.Secure.getStringForUser(context.getContentResolver(),
                 Settings.Secure.DIALER_DEFAULT_APPLICATION, user);
 
         final List<String> packageNames = getInstalledDialerApplications(context);
@@ -123,6 +127,11 @@ public class DefaultDialerManager {
         // Verify that the default dialer has not been disabled or uninstalled.
         if (packageNames.contains(defaultPackageName)) {
             return defaultPackageName;
+        }
+
+        // Verify that the already chosen dialer has not been disabled or uninstalled.
+        if (packageNames.contains(chosenPackageName)) {
+            return chosenPackageName;
         }
 
         // No user-set dialer found, fallback to system dialer
