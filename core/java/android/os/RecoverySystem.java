@@ -39,6 +39,7 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -419,6 +420,38 @@ public class RecoverySystem {
     public static void installPackage(Context context, File packageFile)
             throws IOException {
         installPackage(context, packageFile, false);
+    }
+
+    /**
+     * Krexus API
+     * Reboots the device in order to install the given update
+     * package(s).
+     * Requires the {@link android.Manifest.permission#REBOOT} permission.
+     *
+     * @param context      the Context to use
+     * @param packageFile(s)  the update package(s) to install.  Must be on
+     * a partition mountable by recovery.  (The set of partitions
+     * known to recovery may vary from device to device.  Generally,
+     * /cache and /data are safe.)
+     *
+     * @throws IOException  if writing the recovery command file
+     * fails, or if the reboot itself fails.
+     */
+    public static void installPackages(Context context, File... packageFiles)
+        throws IOException {
+
+        List<String> filenames = new ArrayList<String>();
+        List<String> filenameArgsList = new ArrayList<String>();
+        for (File packageFile : packageFiles) {
+            String filename = packageFile.getCanonicalPath();
+            filenames.add(filename);
+            filenameArgsList.add("--update_package=" + filename);
+        }
+        final String localeArg = "--locale=" + Locale.getDefault().toString();
+        filenameArgsList.add(localeArg);
+
+        String[] filenameArgs = filenameArgsList.toArray(new String[filenameArgsList.size()]);
+        bootCommand(context, filenameArgs);
     }
 
     /**
