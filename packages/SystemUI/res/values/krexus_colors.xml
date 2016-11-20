@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Copyright (c) 2016 Project Substratum
+    Copyright (c) 2016 Krexus
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -23,5 +23,8 @@
 
     <!-- Status bar battery level text color -->
     <color name="status_bar_battery_level_text_color">#ffffff</color>
+
+    <!-- Battery charging color -->
+    <color name="system_primary_color">@*android:color/material_blue_grey_900</color>
 
 </resources>
