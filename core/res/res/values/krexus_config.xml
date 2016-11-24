@@ -48,4 +48,6 @@
     <!-- Battery level for when "show battery percent only on low battery" is enabled -->
     <integer name="config_batteryPercentLowOnlyLevel">25</integer>
 
+    <!-- Single handed mode config -->
+    <bool name="single_hand_mode">true</bool>
 </resources>
