@@ -24,8 +24,6 @@ import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.MetricsProto.MetricsEvent;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 
-import static com.android.systemui.BatteryMeterDrawable.SHOW_PERCENT_SETTING;
-
 public class BatteryPreference extends DropDownPreference implements TunerService.Tunable {
 
     private static final String PERCENT = "percent";
@@ -34,7 +32,6 @@ public class BatteryPreference extends DropDownPreference implements TunerServic
 
     private final String mBattery;
     private boolean mBatteryEnabled;
-    private boolean mHasPercentage;
     private ArraySet<String> mBlacklist;
     private boolean mHasSetValue;
 
@@ -47,8 +44,6 @@ public class BatteryPreference extends DropDownPreference implements TunerServic
     @Override
     public void onAttached() {
         super.onAttached();
-        mHasPercentage = Settings.System.getInt(getContext().getContentResolver(),
-                SHOW_PERCENT_SETTING, 0) != 0;
         TunerService.get(getContext()).addTunable(this, StatusBarIconController.ICON_BLACKLIST);
     }
 
@@ -69,7 +64,7 @@ public class BatteryPreference extends DropDownPreference implements TunerServic
             // what the user didn't choose.  To avoid this, just set the state once and rely on the
             // preference to handle updates.
             mHasSetValue = true;
-            if (mBatteryEnabled && mHasPercentage) {
+            if (mBatteryEnabled) {
                 setValue(PERCENT);
             } else if (mBatteryEnabled) {
                 setValue(DEFAULT);
@@ -83,7 +78,6 @@ public class BatteryPreference extends DropDownPreference implements TunerServic
     protected boolean persistString(String value) {
         final boolean v = PERCENT.equals(value);
         MetricsLogger.action(getContext(), MetricsEvent.TUNER_BATTERY_PERCENTAGE, v);
-        Settings.System.putInt(getContext().getContentResolver(), SHOW_PERCENT_SETTING, v ? 1 : 0);
         if (DISABLED.equals(value)) {
             mBlacklist.add(mBattery);
         } else {
