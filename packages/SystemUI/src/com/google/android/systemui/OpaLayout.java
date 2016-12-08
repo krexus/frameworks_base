@@ -2,6 +2,7 @@ package com.google.android.systemui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
@@ -37,6 +38,8 @@ public class OpaLayout extends FrameLayout implements ButtonDispatcher.ButtonInt
     private static final int RETRACT_ANIMATION_DURATION = 300;
     private static final int DIAMOND_ANIMATION_DURATION = 200;
     private static final int HALO_ANIMATION_DURATION = 100;
+    private static final int OPA_FADE_IN_DURATION = 50;
+    private static final int OPA_FADE_OUT_DURATION = 250;
 
     private static final int DOTS_RESIZE_DURATION = 200;
     private static final int HOME_RESIZE_DURATION = 83;
@@ -85,6 +88,7 @@ public class OpaLayout extends FrameLayout implements ButtonDispatcher.ButtonInt
         public void run() {
             cancelCurrentAnimation();
             startRetractAnimation();
+            hideAllOpa();
         }
     };
 
@@ -112,6 +116,7 @@ public class OpaLayout extends FrameLayout implements ButtonDispatcher.ButtonInt
     }
 
     private void startAll(ArraySet<Animator> animators) {
+        showAllOpa();
         for(int i=0; i < animators.size(); i++) {
             Animator curAnim = (Animator) mCurrentAnimators.valueAt(i);
             curAnim.start();
@@ -224,6 +229,7 @@ public class OpaLayout extends FrameLayout implements ButtonDispatcher.ButtonInt
             public void onAnimationEnd(final Animator animator) {
                 mCurrentAnimators.clear();
                 mAnimationState = ANIMATION_STATE_NONE;
+                hideAllOpa();
             }
         });
         return set;
@@ -404,6 +410,7 @@ public class OpaLayout extends FrameLayout implements ButtonDispatcher.ButtonInt
         mHalo = findViewById(R.id.halo);
         mHome = (KeyButtonView) findViewById(R.id.home_button);
 
+        hideAllOpa();
         setOpaEnabled(true);
     }
 
@@ -493,13 +500,52 @@ public class OpaLayout extends FrameLayout implements ButtonDispatcher.ButtonInt
         final boolean shouldEnable = configValue && (enabled || UserManager.isDeviceInDemoMode(getContext()));
         mOpaEnabled = shouldEnable;
 
-        int visibility = shouldEnable ? View.VISIBLE : View.INVISIBLE;
-
-        mBlue.setVisibility(visibility);
-        mRed.setVisibility(visibility);
-        mYellow.setVisibility(visibility);
-        mGreen.setVisibility(visibility);
+        int visibility;
+        if (shouldEnable) {
+            visibility = View.VISIBLE;
+            showAllOpa();
+        } else {
+            visibility = View.INVISIBLE;
+            hideAllOpa();
+        }
         mHalo.setVisibility(visibility);
     }
 
+    private void hideAllOpa(){
+        fadeOutButton(mBlue);
+        fadeOutButton(mRed);
+        fadeOutButton(mYellow);
+        fadeOutButton(mGreen);
+    }
+
+    private void showAllOpa(){
+        fadeInButton(mBlue);
+        fadeInButton(mRed);
+        fadeInButton(mYellow);
+        fadeInButton(mGreen);
+    }
+
+    private void fadeInButton(View viewToFade){
+        ObjectAnimator animator = ObjectAnimator.ofFloat(viewToFade, View.ALPHA, 0.0f, 1.0f);
+        animator.setDuration(OpaLayout.OPA_FADE_IN_DURATION); //ms
+        animator.start();
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                viewToFade.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void fadeOutButton(View viewToFade){
+        ObjectAnimator animator = ObjectAnimator.ofFloat(viewToFade, View.ALPHA, 1.0f, 0.0f);
+        animator.setDuration(OpaLayout.OPA_FADE_OUT_DURATION); //ms
+        animator.start();
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                viewToFade.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
 }
