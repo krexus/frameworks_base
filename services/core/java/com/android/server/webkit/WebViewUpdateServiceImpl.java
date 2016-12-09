@@ -585,14 +585,18 @@ public class WebViewUpdateServiceImpl {
                 PackageInfo packageInfo) {
             if (!versionCodeGE(packageInfo.versionCode, getMinimumVersionCode())
                     && !mSystemInterface.systemIsDebuggable()) {
+                Slog.e("WebViewDEBUG", "isValidProvider: webview provider version of " + packageInfo.packageName + " is too low!");
                 // Webview providers may be downgraded arbitrarily low, prevent that by enforcing
                 // minimum version code. This check is only enforced for user builds.
                 return false;
             }
+            Slog.e("WebViewDEBUG", "isValidProvider: providerHasValidSignature is triggered for " + packageInfo.packageName + "!");
             if (providerHasValidSignature(configInfo, packageInfo, mSystemInterface) &&
                     WebViewFactory.getWebViewLibrary(packageInfo.applicationInfo) != null) {
+                Slog.e("WebViewDEBUG", "isValidProvider returned TRUE for " + packageInfo.packageName + "!");
                 return true;
             }
+            Slog.e("WebViewDEBUG", "isValidProvider returned FALSE for " + packageInfo.packageName + "!");
             return false;
         }
 
@@ -628,25 +632,34 @@ public class WebViewUpdateServiceImpl {
     private static boolean providerHasValidSignature(WebViewProviderInfo provider,
             PackageInfo packageInfo, SystemInterface systemInterface) {
         if (systemInterface.systemIsDebuggable()) {
-            return true;
+            Slog.e("WebViewDEBUG", "providerHasValidSignature: System is USERDEBUG");
+            Slog.e("WebViewDEBUG", "providerHasValidSignature would return TRUE for " + packageInfo.packageName + "!");
+            //return true;
         }
         Signature[] packageSignatures;
         // If no signature is declared, instead check whether the package is included in the
         // system.
         if (provider.signatures == null || provider.signatures.length == 0) {
+            Slog.e("WebViewDEBUG", "providerHasValidSignature: empty sig for " + packageInfo.packageName + "!");
+            Slog.e("WebViewDEBUG", "Returning " + packageInfo.applicationInfo.isSystemApp() + "for " + packageInfo.packageName + "!");
             return packageInfo.applicationInfo.isSystemApp();
         }
         packageSignatures = packageInfo.signatures;
-        if (packageSignatures.length != 1)
+        if (packageSignatures.length != 1) {
+            Slog.e("WebViewDEBUG", "providerHasValidSignature, return FALSE on bad sig for " + packageInfo.packageName + "!");
             return false;
+        }
 
         final byte[] packageSignature = packageSignatures[0].toByteArray();
         // Return whether the package signature matches any of the valid signatures
         for (String signature : provider.signatures) {
             final byte[] validSignature = Base64.decode(signature, Base64.DEFAULT);
-            if (Arrays.equals(packageSignature, validSignature))
+            if (Arrays.equals(packageSignature, validSignature)) {
+                Slog.e("WebViewDEBUG", "providerHasValidSignature: Signature is valid! Returning TRUE for " + packageInfo.packageName + "!");
                 return true;
+            }
         }
+        Slog.e("WebViewDEBUG", "providerHasValidSignature: returning FALSE because all checks failed for " + packageInfo.packageName + "!");
         return false;
     }
 
