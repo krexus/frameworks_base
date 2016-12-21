@@ -8,4 +8,7 @@
     <!-- Double tap anywhere in lockscreen makes the device go to sleep -->
     <bool name="config_doubletap_lockscreen_sleep">true</bool>
 
+    <!-- Allow Opa (Pixel navbar) layout -->
+    <bool name="config_allowOpaLayout">true</bool>
+
 </resources>
