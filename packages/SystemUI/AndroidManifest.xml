@@ -233,6 +233,7 @@
         <activity android:name=".tuner.NavBarTunerActivity"
                   android:enabled="true"
                   android:icon="@drawable/tuner"
+                  android:theme="@style/TunerSettings"
                   android:label="@string/tuner_navbar_title"
                   android:process=":tuner"
                   android:parentActivityName="com.android.settings.krexus.UISettings"
