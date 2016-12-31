@@ -208,7 +208,7 @@ public class MediaSessionLegacyHelper {
                 final int rotation = windowService.getDefaultDisplay().getRotation();
                 final Configuration config = mContext.getResources().getConfiguration();
                 final boolean swapKeys = Settings.System.getIntForUser(mContext.getContentResolver(),
-                        Settings.System.SWAP_VOLUME_BUTTONS, 1, UserHandle.USER_CURRENT) == 1;
+                        Settings.System.SWAP_VOLUME_BUTTONS, 1, UserHandle.USER_CURRENT_OR_SELF) == 1;
 
                 if (swapKeys
                         && (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_180)
