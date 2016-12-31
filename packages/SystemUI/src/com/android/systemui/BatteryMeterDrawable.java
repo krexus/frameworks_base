@@ -42,6 +42,7 @@ import android.graphics.drawable.StopMotionVectorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
@@ -241,10 +242,10 @@ public class BatteryMeterDrawable extends Drawable implements
         mListening = true;
         mContext.getContentResolver().registerContentObserver(
                 Settings.Secure.getUriFor(Settings.Secure.STATUS_BAR_SHOW_BATTERY_PERCENT),
-                false, mSettingObserver);
+                false, mSettingObserver, UserHandle.USER_ALL);
         mContext.getContentResolver().registerContentObserver(
                 Settings.Secure.getUriFor(Settings.Secure.STATUS_BAR_SHOW_BATTERY_PERCENT_LOW_ONLY),
-                false, mSettingObserver);
+                false, mSettingObserver, UserHandle.USER_ALL);
         updateShowPercent();
         updateShowPercentLowOnly();
         mBatteryController.addStateChangedCallback(this);
@@ -328,13 +329,13 @@ public class BatteryMeterDrawable extends Drawable implements
     }
 
     private void updateShowPercent() {
-        mShowPercent = Settings.Secure.getInt(mContext.getContentResolver(),
-                Settings.Secure.STATUS_BAR_SHOW_BATTERY_PERCENT, 0) == 1;
+        mShowPercent = Settings.Secure.getIntForUser(mContext.getContentResolver(),
+                Settings.Secure.STATUS_BAR_SHOW_BATTERY_PERCENT, 0, UserHandle.USER_CURRENT) == 1;
     }
 
     private void updateShowPercentLowOnly() {
-        mShowPercentLowOnly = Settings.Secure.getInt(mContext.getContentResolver(),
-                Settings.Secure.STATUS_BAR_SHOW_BATTERY_PERCENT_LOW_ONLY, 0) == 1;
+        mShowPercentLowOnly = Settings.Secure.getIntForUser(mContext.getContentResolver(),
+                Settings.Secure.STATUS_BAR_SHOW_BATTERY_PERCENT_LOW_ONLY, 0, UserHandle.USER_CURRENT) == 1;
     }
 
     private int getColorForLevel(int percent) {
