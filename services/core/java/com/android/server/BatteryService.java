@@ -889,12 +889,12 @@ public final class BatteryService extends SystemService {
             Resources res = mContext.getResources();
 
             // Charging battery LED light enabled
-            mBatteryLedEnabled = Settings.System.getInt(resolver,
-                    Settings.System.CHARGING_BATTERY_LED, 0) != 0;
+            mBatteryLedEnabled = Settings.System.getIntForUser(resolver,
+                    Settings.System.CHARGING_BATTERY_LED, 0, UserHandle.USER_CURRENT) != 0;
 
             // Low battery pulse
-            mLowBatteryPulse = Settings.System.getInt(resolver,
-                        Settings.System.LOW_BATTERY_PULSE, 1) != 0;
+            mLowBatteryPulse = Settings.System.getIntForUser(resolver,
+                        Settings.System.LOW_BATTERY_PULSE, 1, UserHandle.USER_CURRENT) != 0;
 
             mLed.updateLightsLocked();
         }
