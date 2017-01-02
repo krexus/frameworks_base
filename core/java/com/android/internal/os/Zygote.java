@@ -56,7 +56,11 @@ public final class Zygote {
     public static final int MOUNT_EXTERNAL_WRITE = 3;
 
     private static final String[] PIXEL_SERVICES = {
+        "com.google.process.gapps",
+        "com.google.android.apps.nexuslauncher",
         "com.google.android.googlequicksearchbox",
+        "com.google.android.gms",
+        "com.google.android.apps.photos"
     };
 
     private static final ZygoteHooks VM_HOOKS = new ZygoteHooks();
