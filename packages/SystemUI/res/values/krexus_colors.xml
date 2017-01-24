@@ -34,4 +34,6 @@
     <color name="qs_alarm_status_text_color">#64ffffff</color>
     <!-- QS edit page toolbar text color -->
     <color name="qs_edit_toolbar_text_color">#FFFFFF</color>
+    <!-- External QS tile tint color -->
+    <color name="external_qs_tile_tint_color">@android:color/white</color>
 </resources>
