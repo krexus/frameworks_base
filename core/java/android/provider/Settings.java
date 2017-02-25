@@ -6566,6 +6566,12 @@ public final class Settings {
          */
         public static final String ONE_HANDED_MODE_UI = "one_handed_mode_ui";
 
+        /**
+         * Force authorize Substratum (or equivalent) frontend calling packages by Masquerade
+         * @hide
+         */
+        public static final String FORCE_AUTHORIZE_SUBSTRATUM_PACKAGES = "force_authorize_substratum_packages";
+
 
         /**
          * Status bar battery %
