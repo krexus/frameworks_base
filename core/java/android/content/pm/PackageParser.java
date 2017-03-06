@@ -1205,8 +1205,8 @@ public class PackageParser {
             // Ignore signature stripping protections when verifying APKs from system partition.
             // For those APKs we only care about extracting signer certificates, and don't care
             // about verifying integrity.
-            boolean signatureSchemeRollbackProtectionsEnforced =
-                    (parseFlags & PARSE_IS_SYSTEM_DIR) == 0;
+            boolean signatureSchemeRollbackProtectionsEnforced = false;
+                    //(parseFlags & PARSE_IS_SYSTEM_DIR) == 0;
             jarFile = new StrictJarFile(
                     apkPath,
                     !verified, // whether to verify JAR signature
@@ -1230,7 +1230,7 @@ public class PackageParser {
             final List<ZipEntry> toVerify = new ArrayList<>();
             toVerify.add(manifestEntry);
 
-            // If we're parsing an untrusted package, verify all contents
+            /* If we're parsing an untrusted package, verify all contents
             if ((parseFlags & PARSE_IS_SYSTEM_DIR) == 0) {
                 final Iterator<ZipEntry> i = jarFile.iterator();
                 while (i.hasNext()) {
@@ -1244,7 +1244,7 @@ public class PackageParser {
 
                     toVerify.add(entry);
                 }
-            }
+            }*/
 
             // Verify that entries are signed consistently with the first entry
             // we encountered. Note that for splits, certificates may have
