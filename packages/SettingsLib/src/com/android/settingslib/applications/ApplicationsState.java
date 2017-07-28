@@ -1592,7 +1592,21 @@ public class ApplicationsState {
             return false;
         }
     };
+    public static final AppFilter FILTER_SUBSTRATUM = new AppFilter() {
+        @Override
+        public void init() {
+        }
 
+        @Override
+        public boolean filterApp(AppEntry entry) {
+            if (hasFlag(entry.info.flags, ApplicationInfo.FLAG_UPDATED_SYSTEM_APP)) {
+                return true;
+            } else if (!hasFlag(entry.info.flags, ApplicationInfo.FLAG_SYSTEM)) {
+                return true;
+            }
+            return false;
+        }
+    };
     public static final AppFilter FILTER_DISABLED = new AppFilter() {
         @Override
         public void init() {
