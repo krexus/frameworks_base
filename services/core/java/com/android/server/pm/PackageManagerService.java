@@ -11251,7 +11251,7 @@ public class PackageManagerService extends IPackageManager.Stub
                     // its signature is signed with a whitelisted OEM theme system certificate.
                     ArraySet<String> wlSigApps =
                             SystemConfig.getInstance().getThemeSystemSignatureWhitelistedApps();
-                    private boolean sigAllowed;
+                    boolean sigAllowed = false;
                     for (String pkgName : wlSigApps) {
                         PackageSetting platformPkgSetting = mSettings.getPackageLPr(pkgName);
                         sigAllowed = (platformPkgSetting.signatures.mSigningDetails
@@ -11259,7 +11259,7 @@ public class PackageManagerService extends IPackageManager.Stub
                                 && (compareSignatures(
                                         platformPkgSetting.signatures.mSigningDetails.signatures,
                                         pkg.mSigningDetails.signatures)
-                                                == PackageManager.SIGNATURE_MATCH));
+                                                == PackageManager.SIGNATURE_MATCH);
                         if (sigAllowed) {
                             break;
                         }
