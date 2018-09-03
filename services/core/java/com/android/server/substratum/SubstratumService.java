@@ -20,14 +20,19 @@ import android.annotation.NonNull;
 import android.app.AppGlobals;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.IIntentReceiver;
+import android.content.IIntentSender;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.om.IOverlayManager;
 import android.content.om.OverlayInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageDeleteObserver;
-import android.content.pm.IPackageInstallObserver2;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageInstaller;
+import android.content.pm.PackageInstaller.Session;
+import android.content.pm.PackageInstaller.SessionParams;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
@@ -68,6 +73,8 @@ import java.lang.Throwable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import static android.os.Binder.getCallingUid;
@@ -271,31 +278,29 @@ public final class SubstratumService extends SystemService {
                     Settings.Global.PACKAGE_VERIFIER_ENABLE, 1);
             try {
                 synchronized (mLock) {
-                    PackageInstallObserver installObserver = new PackageInstallObserver();
                     PackageDeleteObserver deleteObserver = new PackageDeleteObserver();
-                    for (String path : paths) {
-                        mInstalledPackageName = null;
-                        log("Installer - installing package from path \'" + path + "\'");
-                        mIsWaiting = true;
-                        Settings.Global.putInt(mContext.getContentResolver(),
-                                Settings.Global.PACKAGE_VERIFIER_ENABLE, 0);
-                        try {
-                            mPm.installExistingPackageAsUser(
-                                    mInstalledPackageName,
-                                    UserHandle.USER_SYSTEM,
-                                    PackageManager.INSTALL_REPLACE_EXISTING,
-                                    PackageManager.INSTALL_REASON_UNKNOWN);
+                    LocalIntentReceiver receiver = new LocalIntentReceiver();
+                    PackageManager packageManager = mContext.getPackageManager();
+                    PackageInstaller installer = packageManager.getPackageInstaller();
+                    PackageInstaller.Session session = null;
 
-                            while (mIsWaiting) {
-                                try {
-                                    Thread.sleep(1);
-                                } catch (InterruptedException e) {
-                                    // Someone interrupted my sleep, ugh!
-                                }
-                            }
-                        } catch (RemoteException e) {
-                            logE("There is an exception when trying to install " + path, e);
-                            continue;
+                    for (String path : paths) {
+                        File pkgFile = new File(path);
+                        SessionParams params = new SessionParams(SessionParams.MODE_FULL_INSTALL);
+                        params.setInstallerPackageName("projekt.substratum");
+
+                        try {
+                            int sessionId = installer.createSession(params);
+
+                            log("Installer - installing package from path \'" + path + "\'");
+                            Settings.Global.putInt(mContext.getContentResolver(),
+                                    Settings.Global.PACKAGE_VERIFIER_ENABLE, 0);
+
+                            session = installer.openSession(sessionId);
+                            session.commit(receiver.getIntentSender());
+                        } catch (Exception t) {
+                           // installer.abandonSession(sessionId);
+                            //throw t;
                         }
 
                         if (mInstalledPackageName != null) {
@@ -1124,27 +1129,36 @@ public final class SubstratumService extends SystemService {
         }
     };
 
-    private class PackageInstallObserver extends IPackageInstallObserver2.Stub {
-        @Override
-        public void onUserActionRequired(Intent intent) throws RemoteException {
-            log("Installer - user action required callback");
-            mIsWaiting = false;
-        }
-
-        @Override
-        public void onPackageInstalled(String packageName, int returnCode,
-                                       String msg, Bundle extras) {
-            log("Installer - successfully installed \'" + packageName + "\'!");
-            mInstalledPackageName = packageName;
-            mIsWaiting = false;
-        }
-    }
-
     private class PackageDeleteObserver extends IPackageDeleteObserver.Stub {
         @Override
         public void packageDeleted(String packageName, int returnCode) {
             log("Remover - successfully removed \'" + packageName + "\'");
             mIsWaiting = false;
+        }
+    }
+
+    private static class LocalIntentReceiver {
+        private final SynchronousQueue<Intent> mResult = new SynchronousQueue<>();
+         private IIntentSender.Stub mLocalSender = new IIntentSender.Stub() {
+            @Override
+            public void send(int code, Intent intent, String resolvedType, IBinder whitelistToken,
+                    IIntentReceiver finishedReceiver, String requiredPermission, Bundle options) {
+                try {
+                    mResult.offer(intent, 5, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+         public IntentSender getIntentSender() {
+            return new IntentSender((IIntentSender) mLocalSender);
+        }
+         public Intent getResult() {
+            try {
+                return mResult.take();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
